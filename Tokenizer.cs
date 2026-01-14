@@ -61,10 +61,38 @@ public class Tokenizer
             }
         }
 
-        // skip whitespace tokens
+        // skip whitespace and comments
         if (bestTerminal!.sym == "WHITESPACE" || bestTerminal!.sym == "COMMENT")
-        return next();
+            return next();
 
+        // FIX: strip quotes and unescape string constants
+        if (bestTerminal.sym == "STRINGCONST")
+{
+    string raw = lexeme.Substring(1, lexeme.Length - 2);
+    var sb = new System.Text.StringBuilder();
+
+    for (int i = 0; i < raw.Length; i++)
+    {
+        if (raw[i] == '\\' && i + 1 < raw.Length)
+        {
+            char c = raw[++i];
+            sb.Append(c switch
+            {
+                'n'  => '\n',
+                't'  => '\t',
+                '"'  => '"',
+                '\\' => '\\',
+                _    => c
+            });
+        }
+        else
+        {
+            sb.Append(raw[i]);
+        }
+    }
+
+    lexeme = sb.ToString();
+}
         return new Token(
             bestTerminal.sym,
             startLine,

@@ -17,6 +17,8 @@ RETURN :: return
 TYPE :: int
 BOOLCONST :: true|false
 
+STRINGCONST :: ""(\\[nt\""\\]|[^""\\])*""
+
 ID :: [a-zA-Z_][a-zA-Z0-9_]*
 
 FNUM :: ([0-9]+\.[0-9]*|\.[0-9]+|[0-9]+)([eE][+-]?[0-9]+)
@@ -31,12 +33,12 @@ RBRACE :: \}
 COLON :: :
 EQ :: =
 COMMA :: ,
-ADDOP :: [+\-]
-MULOP :: [/*]
-BITOP :: &
-BITNOT :: ~
-RELOP :: <
-
+ADDOP   :: [+\-]
+MULOP   :: [/*%]
+SHIFTOP :: <<|>>
+BITOP   :: [&|^]
+BITNOT  :: ~
+RELOP   :: <
 
 
 ";
