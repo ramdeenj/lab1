@@ -7,14 +7,14 @@ public class Tokenizer
     private string input = "";
     private int index = 0;
     private int line = 1;
-    private int column = 0;   // ✅ 0-based columns
+    private int column = 0;   
 
     public void setInput(string input)
     {
         this.input = input;
         index = 0;
         line = 1;
-        column = 0;           // ✅ reset to 0
+        column = 0;          
     }
 
     public Token next()
@@ -45,7 +45,7 @@ public class Tokenizer
 
         string lexeme = bestMatch.Value;
         int startLine = line;
-        int startColumn = column;   // ✅ correct
+        int startColumn = column;   
 
         // advance index, line, column
         foreach (char c in lexeme)
@@ -54,7 +54,7 @@ public class Tokenizer
             if (c == '\n')
             {
                 line++;
-                column = 0;        // ✅ reset to 0 on newline
+                column = 0;        
             }
             else
             {
