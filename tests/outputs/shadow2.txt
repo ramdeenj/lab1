@@ -1,0 +1,296 @@
+[
+  {
+    "sym": "FUNC",
+    "lexeme": "func",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "sym": "ID",
+    "lexeme": "main",
+    "line": 1,
+    "column": 5
+  },
+  {
+    "sym": "LPAREN",
+    "lexeme": "(",
+    "line": 1,
+    "column": 9
+  },
+  {
+    "sym": "RPAREN",
+    "lexeme": ")",
+    "line": 1,
+    "column": 10
+  },
+  {
+    "sym": "LBRACE",
+    "lexeme": "{",
+    "line": 1,
+    "column": 11
+  },
+  {
+    "sym": "VAR",
+    "lexeme": "var",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 2,
+    "column": 8
+  },
+  {
+    "sym": "COLON",
+    "lexeme": ":",
+    "line": 2,
+    "column": 9
+  },
+  {
+    "sym": "TYPE",
+    "lexeme": "int",
+    "line": 2,
+    "column": 11
+  },
+  {
+    "sym": "VAR",
+    "lexeme": "var",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "sym": "ID",
+    "lexeme": "y",
+    "line": 3,
+    "column": 8
+  },
+  {
+    "sym": "COLON",
+    "lexeme": ":",
+    "line": 3,
+    "column": 9
+  },
+  {
+    "sym": "TYPE",
+    "lexeme": "int",
+    "line": 3,
+    "column": 11
+  },
+  {
+    "sym": "VAR",
+    "lexeme": "var",
+    "line": 4,
+    "column": 4
+  },
+  {
+    "sym": "ID",
+    "lexeme": "z",
+    "line": 4,
+    "column": 8
+  },
+  {
+    "sym": "COLON",
+    "lexeme": ":",
+    "line": 4,
+    "column": 9
+  },
+  {
+    "sym": "TYPE",
+    "lexeme": "int",
+    "line": 4,
+    "column": 11
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 5,
+    "column": 4
+  },
+  {
+    "sym": "EQ",
+    "lexeme": "=",
+    "line": 5,
+    "column": 5
+  },
+  {
+    "sym": "NUM",
+    "lexeme": "1",
+    "line": 5,
+    "column": 6
+  },
+  {
+    "sym": "ID",
+    "lexeme": "y",
+    "line": 6,
+    "column": 4
+  },
+  {
+    "sym": "EQ",
+    "lexeme": "=",
+    "line": 6,
+    "column": 5
+  },
+  {
+    "sym": "NUM",
+    "lexeme": "2",
+    "line": 6,
+    "column": 6
+  },
+  {
+    "sym": "IF",
+    "lexeme": "if",
+    "line": 7,
+    "column": 4
+  },
+  {
+    "sym": "LPAREN",
+    "lexeme": "(",
+    "line": 7,
+    "column": 6
+  },
+  {
+    "sym": "BOOLCONST",
+    "lexeme": "true",
+    "line": 7,
+    "column": 8
+  },
+  {
+    "sym": "RPAREN",
+    "lexeme": ")",
+    "line": 7,
+    "column": 13
+  },
+  {
+    "sym": "LBRACE",
+    "lexeme": "{",
+    "line": 7,
+    "column": 14
+  },
+  {
+    "sym": "VAR",
+    "lexeme": "var",
+    "line": 8,
+    "column": 8
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 8,
+    "column": 12
+  },
+  {
+    "sym": "COLON",
+    "lexeme": ":",
+    "line": 8,
+    "column": 13
+  },
+  {
+    "sym": "TYPE",
+    "lexeme": "int",
+    "line": 8,
+    "column": 15
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 9,
+    "column": 8
+  },
+  {
+    "sym": "EQ",
+    "lexeme": "=",
+    "line": 9,
+    "column": 9
+  },
+  {
+    "sym": "NUM",
+    "lexeme": "4",
+    "line": 9,
+    "column": 10
+  },
+  {
+    "sym": "ID",
+    "lexeme": "z",
+    "line": 10,
+    "column": 8
+  },
+  {
+    "sym": "EQ",
+    "lexeme": "=",
+    "line": 10,
+    "column": 9
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 10,
+    "column": 10
+  },
+  {
+    "sym": "RBRACE",
+    "lexeme": "}",
+    "line": 11,
+    "column": 4
+  },
+  {
+    "sym": "ID",
+    "lexeme": "z",
+    "line": 12,
+    "column": 4
+  },
+  {
+    "sym": "EQ",
+    "lexeme": "=",
+    "line": 12,
+    "column": 5
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 12,
+    "column": 6
+  },
+  {
+    "sym": "ADDOP",
+    "lexeme": "+",
+    "line": 12,
+    "column": 7
+  },
+  {
+    "sym": "ID",
+    "lexeme": "y",
+    "line": 12,
+    "column": 8
+  },
+  {
+    "sym": "ADDOP",
+    "lexeme": "+",
+    "line": 12,
+    "column": 9
+  },
+  {
+    "sym": "ID",
+    "lexeme": "z",
+    "line": 12,
+    "column": 10
+  },
+  {
+    "sym": "RETURN",
+    "lexeme": "return",
+    "line": 13,
+    "column": 4
+  },
+  {
+    "sym": "ID",
+    "lexeme": "z",
+    "line": 13,
+    "column": 11
+  },
+  {
+    "sym": "RBRACE",
+    "lexeme": "}",
+    "line": 14,
+    "column": 0
+  }
+]

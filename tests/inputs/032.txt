@@ -1,0 +1,4 @@
+    func main(): int {
+        put3(65.2,66,67)
+        return 1
+    }

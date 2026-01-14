@@ -1,0 +1,3 @@
+func main() {
+    return 100>>2 	//25
+}

@@ -1,0 +1,4 @@
+    func main() : int {
+        putc(65)
+        return 123
+    }

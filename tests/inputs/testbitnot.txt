@@ -1,0 +1,3 @@
+func main() {
+    return ~3  //-4 or 252 or 4294967292 
+}

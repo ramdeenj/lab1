@@ -1,0 +1,4 @@
+func main(): int {
+    newline(1.0)
+    return 0
+}

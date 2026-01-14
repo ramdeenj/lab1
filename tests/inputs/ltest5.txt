@@ -1,0 +1,9 @@
+func main() {
+    var x: int
+    var y: int
+    var z: int
+    x = 10
+    y = 20
+    z = x+y
+    return z
+}

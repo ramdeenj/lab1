@@ -1,0 +1,5 @@
+func main(): int {
+    var i: int
+    i = getc
+    return 0
+}

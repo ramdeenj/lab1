@@ -1,0 +1,4 @@
+    func main(): int {
+        putc=putc
+        return 0
+    }

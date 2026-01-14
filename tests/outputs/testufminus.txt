@@ -1,0 +1,56 @@
+[
+  {
+    "sym": "FUNC",
+    "lexeme": "func",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "sym": "ID",
+    "lexeme": "main",
+    "line": 1,
+    "column": 5
+  },
+  {
+    "sym": "LPAREN",
+    "lexeme": "(",
+    "line": 1,
+    "column": 9
+  },
+  {
+    "sym": "RPAREN",
+    "lexeme": ")",
+    "line": 1,
+    "column": 10
+  },
+  {
+    "sym": "LBRACE",
+    "lexeme": "{",
+    "line": 1,
+    "column": 12
+  },
+  {
+    "sym": "RETURN",
+    "lexeme": "return",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "sym": "ADDOP",
+    "lexeme": "-",
+    "line": 2,
+    "column": 11
+  },
+  {
+    "sym": "FNUM",
+    "lexeme": "5.3",
+    "line": 2,
+    "column": 12
+  },
+  {
+    "sym": "RBRACE",
+    "lexeme": "}",
+    "line": 3,
+    "column": 0
+  }
+]

@@ -1,0 +1,4 @@
+    func main() : int {
+        putv(123456789,2)
+        return 126
+    }

@@ -1,0 +1,128 @@
+[
+  {
+    "sym": "VAR",
+    "lexeme": "var",
+    "line": 1,
+    "column": 4
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 1,
+    "column": 8
+  },
+  {
+    "sym": "COLON",
+    "lexeme": ":",
+    "line": 1,
+    "column": 9
+  },
+  {
+    "sym": "TYPE",
+    "lexeme": "int",
+    "line": 1,
+    "column": 11
+  },
+  {
+    "sym": "FUNC",
+    "lexeme": "func",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "sym": "ID",
+    "lexeme": "main",
+    "line": 2,
+    "column": 9
+  },
+  {
+    "sym": "LPAREN",
+    "lexeme": "(",
+    "line": 2,
+    "column": 13
+  },
+  {
+    "sym": "RPAREN",
+    "lexeme": ")",
+    "line": 2,
+    "column": 14
+  },
+  {
+    "sym": "COLON",
+    "lexeme": ":",
+    "line": 2,
+    "column": 16
+  },
+  {
+    "sym": "TYPE",
+    "lexeme": "int",
+    "line": 2,
+    "column": 18
+  },
+  {
+    "sym": "LBRACE",
+    "lexeme": "{",
+    "line": 2,
+    "column": 22
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 3,
+    "column": 8
+  },
+  {
+    "sym": "EQ",
+    "lexeme": "=",
+    "line": 3,
+    "column": 9
+  },
+  {
+    "sym": "NUM",
+    "lexeme": "66",
+    "line": 3,
+    "column": 10
+  },
+  {
+    "sym": "ID",
+    "lexeme": "putc",
+    "line": 4,
+    "column": 8
+  },
+  {
+    "sym": "LPAREN",
+    "lexeme": "(",
+    "line": 4,
+    "column": 12
+  },
+  {
+    "sym": "ID",
+    "lexeme": "x",
+    "line": 4,
+    "column": 13
+  },
+  {
+    "sym": "RPAREN",
+    "lexeme": ")",
+    "line": 4,
+    "column": 14
+  },
+  {
+    "sym": "RETURN",
+    "lexeme": "return",
+    "line": 5,
+    "column": 8
+  },
+  {
+    "sym": "NUM",
+    "lexeme": "124",
+    "line": 5,
+    "column": 15
+  },
+  {
+    "sym": "RBRACE",
+    "lexeme": "}",
+    "line": 6,
+    "column": 4
+  }
+]

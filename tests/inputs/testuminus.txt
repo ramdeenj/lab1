@@ -1,0 +1,3 @@
+func main() {
+    return -2   //254 as u8, 4294967294 as u32
+}

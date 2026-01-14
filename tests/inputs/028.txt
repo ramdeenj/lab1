@@ -1,0 +1,5 @@
+    var x: int
+    func main(): int {
+        x = putc
+        return 1
+    }
