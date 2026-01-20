@@ -1,10 +1,9 @@
 // terminals.cs
-
 using System.Text.RegularExpressions;
 
 public static class Terminals
 {
-  public static string terminalspec = @"
+    public static string terminalspec = @"
 
 WHITESPACE :: [ \t\r\n]+
 COMMENT :: //[^\r\n]*(\r?\n)?
@@ -15,8 +14,8 @@ WHILE :: while
 IF :: if
 RETURN :: return
 TYPE :: int
-BOOLCONST :: true|false
 
+BOOLCONST :: true|false
 STRINGCONST :: ""(\\[nt\""\\]|[^""\\])*""
 
 ID :: [a-zA-Z_][a-zA-Z0-9_]*
@@ -30,16 +29,17 @@ LPAREN :: \(
 RPAREN :: \)
 LBRACE :: \{
 RBRACE :: \}
-COLON :: :
-EQ :: =
-COMMA :: ,
+COMMA  :: ,
+COLON  :: :
+
+SHIFTOP :: <<|>>
+RELOP   :: <=|>=|==
+RELOP   :: <
+EQ      :: =
 ADDOP   :: [+\-]
 MULOP   :: [/*%]
-SHIFTOP :: <<|>>
 BITOP   :: [&|^]
 BITNOT  :: ~
-RELOP   :: <
-
 
 ";
 
