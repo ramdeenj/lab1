@@ -1,4 +1,0 @@
-    func main(): int {
-        blargl(100)
-        return 0
-    }

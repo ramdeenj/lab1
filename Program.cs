@@ -1,68 +1,39 @@
-﻿//program.cs
-
+﻿//Program.cs
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 
-public class Program
-{
+public class Program {
+
     public static void Main(string[] args)
     {
-        // Argument validation
-
-        if (args.Length != 1)
-        {
-            Console.Error.WriteLine("Usage: tokenizer <filename>");
-            Environment.Exit(1);
-        }
-
-        string input;
-        try
-        {
-            input = File.ReadAllText(args[0]);
-        }
-        catch
-        {
-            // File could not be opened
-            Environment.Exit(1);
-            return;
-        }
-
-        // Initialize terminals
-        Terminals.init();
-
-        // Tokenize
         var T = new Tokenizer();
-        T.setInput(input);
-
-        List<Token> tokens = new();
-
-        try
+        using( var r = new StreamReader(args[0]))
         {
-            while (true)
-            {
-                Token tok = T.next();
-                if (tok.sym == "$")
-                    break;
-                tokens.Add(tok);
-            }
+            T.setInput(r.ReadToEnd());
         }
-        catch
-        {
-            // Tokenization failure
-            Environment.Exit(1);
-        }
-        // Output JSON
-        var opts = new System.Text.Json.JsonSerializerOptions
-        {
-            IncludeFields = true,
-            WriteIndented = true,
-            MaxDepth = 1000000,
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
-        };
 
-        string json = System.Text.Json.JsonSerializer.Serialize(tokens, opts);
-        Console.WriteLine(json);
+        var p = ProgramNode.parse(T);
+
+        Treedump.textTree(p, Console.Out);
+        // List<Token> tokens = new();
+        // while (true)
+        // {
+        //     Token tok = T.next();
+        //     if( tok.sym == "$")
+        //         break;
+        //     tokens.Add(tok);
+        // }
+
+        // var opts = new System.Text.Json.JsonSerializerOptions();
+        // opts.IncludeFields=true;
+        // opts.WriteIndented=true;
+        // opts.MaxDepth=1000000;
+        // //next line is optional; minimizes output escapes
+        // opts.Encoder=JavaScriptEncoder.Create(UnicodeRanges.All);
+        // string J = System.Text.Json.JsonSerializer.Serialize(tokens,opts);
+        // Console.WriteLine(J);
 
         Environment.Exit(0);
     }
+
 }

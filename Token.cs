@@ -1,21 +1,17 @@
-// token.cs
-public class Token
-{
+//Token.cs
+public class Token {
     public string sym;
     public string lexeme;
     public int line;
-    public int column;
-
-    public Token(string sym, int line, int column, string lexeme)
+    public Token(string sym, int line, string lexeme)
     {
         this.sym = sym;
-        this.line = line;
-        this.column = column;
+        this.line= line;
         this.lexeme = lexeme;
     }
 
     public override string ToString()
     {
-        return $"[{sym} {line}:{column} {lexeme}]";
+        return $"[{this.sym} {this.line} {this.lexeme}]";
     }
 }

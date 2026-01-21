@@ -1,0 +1,12 @@
+func foo(){
+    if 2 {
+        return 20
+    } else if 3 {
+        return 30
+    } else if 4 {
+        return 40
+    } else {
+        return 50
+        return 55
+    }
+}

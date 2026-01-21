@@ -1,4 +1,0 @@
-    func main(): int {
-        putc=42
-        return 0
-    }

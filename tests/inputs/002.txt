@@ -1,8 +1,0 @@
-    var x: int
-    func main() : int {
-        x=68
-        putc(67)
-        newline()
-        putc(x)
-        return 125
-    }

@@ -1,0 +1,10 @@
+func main(){
+    while 1 {
+
+
+        //stuff
+
+
+    }
+    return 0
+}

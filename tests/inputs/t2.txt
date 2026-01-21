@@ -1,0 +1,12 @@
+func total() : int {
+    if 2 {
+        return 1
+        return 2
+    } else {
+        return 3
+    }
+}
+
+func main() {
+    return 0
+}

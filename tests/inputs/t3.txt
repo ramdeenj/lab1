@@ -1,0 +1,8 @@
+func thing() {
+    while 10 {
+        return
+        return
+        return
+    }
+    return 1
+}

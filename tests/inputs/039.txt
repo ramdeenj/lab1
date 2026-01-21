@@ -1,4 +1,0 @@
-    func main() : int {
-        putv(1234,10)
-        return 126
-    }

@@ -1,4 +1,0 @@
-    func main(): int {
-        put4(65.2,66,67,68)
-        return 1
-    }

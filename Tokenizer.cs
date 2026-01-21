@@ -1,105 +1,82 @@
-// tokenizer.cs
-using System.Text.RegularExpressions;
-using System.Text;
-
 public class Tokenizer
 {
     private string input = "";
     private int index = 0;
     private int line = 1;
-    private int column = 0;   
+
+    private Token? peeked = null;
+
+    public Tokenizer()
+    {
+        Terminals.init();
+    }
 
     public void setInput(string input)
     {
         this.input = input;
         index = 0;
         line = 1;
-        column = 0;          
+        peeked = null;
     }
 
     public Token next()
     {
-        if (index >= input.Length)
-            return new Token("$", line, column, "");
+        if (peeked != null)
+        {
+            Token t = peeked;
+            peeked = null;
+            return t;
+        }
 
-        Match? bestMatch = null;
-        Terminals.Terminal? bestTerminal = null;
+        if (index >= input.Length)
+            return new Token("$", line, "");
+
+        Terminals.Terminal? best = null;
+        int bestLen = 0;
 
         foreach (var t in Terminals.terminals)
         {
             var m = t.rex.Match(input, index);
-            if (m.Success)
+            if (m.Success && m.Length > bestLen)
             {
-                if (bestMatch == null || m.Length > bestMatch.Length)
-                {
-                    bestMatch = m;
-                    bestTerminal = t;
-                }
+                best = t;
+                bestLen = m.Length;
             }
         }
 
-        if (bestMatch == null)
+        if (best == null)
         {
-            throw new Exception($"Tokenizer error at line {line}, column {column}");
+            Utils.error($"Tokenizer error at line {line}");
+            throw new Exception();
         }
 
-        string lexeme = bestMatch.Value;
-        int startLine = line;
-        int startColumn = column;   
+        string lexeme = input.Substring(index, bestLen);
+        index += bestLen;
 
-        // advance index, line, column
         foreach (char c in lexeme)
-        {
-            index++;
-            if (c == '\n')
-            {
-                line++;
-                column = 0;        
-            }
-            else
-            {
-                column++;
-            }
-        }
+            if (c == '\n') line++;
 
-        // skip whitespace and comments
-        if (bestTerminal!.sym == "WHITESPACE" || bestTerminal.sym == "COMMENT")
+        if (best.sym == "WHITESPACE")
             return next();
 
-        // STRINGCONST handling
-        if (bestTerminal.sym == "STRINGCONST")
+        return new Token(best.sym, line, lexeme);
+    }
+
+    public Token expect(string sym)
+    {
+        Token t = next();
+        if (t.sym != sym)
         {
-            string raw = lexeme.Substring(1, lexeme.Length - 2);
-            var sb = new StringBuilder();
-
-            for (int i = 0; i < raw.Length; i++)
-            {
-                if (raw[i] == '\\' && i + 1 < raw.Length)
-                {
-                    char c = raw[++i];
-                    sb.Append(c switch
-                    {
-                        'n'  => '\n',
-                        't'  => '\t',
-                        '"'  => '"',
-                        '\\' => '\\',
-                        _    => c
-                    });
-                }
-                else
-                {
-                    sb.Append(raw[i]);
-                }
-            }
-
-            lexeme = sb.ToString();
+            Utils.error($"Expected {sym} but got {t}");
+            throw new Exception();
         }
+        return t;
+    }
 
-        return new Token(
-            bestTerminal.sym,
-            startLine,
-            startColumn,
-            lexeme
-        );
+    public string peek()
+    {
+        if (peeked == null)
+            peeked = next();
+        return peeked.sym;
     }
 }

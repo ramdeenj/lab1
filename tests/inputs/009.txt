@@ -1,4 +1,0 @@
-    func main(): int {
-        newline( 42 )
-        return 0
-    }
