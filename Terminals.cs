@@ -1,35 +1,42 @@
+//Terminals.cs
+
 using System.Text.RegularExpressions;
 
-public static class Terminals
-{
-    public static string terminalspec = @"
+public static class Terminals{
 
-        WHITESPACE :: [ \t\r\n]+
+public static string terminalspec = @"
 
-        FUNC    :: func
-        RETURN  :: return
-        IF      :: if
+    WHITESPACE :: [ \t\r\n]+
 
-        LBRACE  :: \{
-        RBRACE  :: \}
-        LPAREN  :: \(
-        RPAREN  :: \)
-        COLON   :: :
+    FUNC :: func
+    RETURN :: return
 
-        NUM     :: [0-9]+
-        ID      :: [a-zA-Z_][a-zA-Z0-9_]*
+    NUM :: [0-9]+
+    ID :: [a-zA-Z_][a-zA-Z0-9_]*
 
-    ";
+    SHIFTLEFT :: <<
+    AND :: &
+    OR :: \|
 
-    public class Terminal
-    {
+    PLUS :: \+
+    MINUS :: -
+    STAR :: \*
+    SLASH :: /
+
+    LPAREN :: \(
+    RPAREN :: \)
+    LBRACE :: \{
+    RBRACE :: \}
+
+";
+
+    public class Terminal{
         public string sym;
         public Regex rex;
-
         public Terminal(string sym, Regex rex)
         {
-            this.sym = sym;
-            this.rex = rex;
+            this.sym=sym;
+            this.rex=rex;
         }
     }
 
@@ -37,19 +44,15 @@ public static class Terminals
 
     public static void init()
     {
-        terminals.Clear();
-        foreach (var line_ in terminalspec.Split('\n'))
+        foreach( var line_ in terminalspec.Split('\n'))
         {
             var line = line_.Trim();
-            if (line.Length == 0) continue;
-
-            var parts = line.Split("::");
-            string sym = parts[0].Trim();
-            string regex = parts[1].Trim();
-
-            terminals.Add(
-                new Terminal(sym, new Regex(@"\G(" + regex + ")"))
-            );
+            if( line.Length == 0 )
+                continue;
+            var tmp = line.Split("::");
+            string sym = tmp[0].Trim();
+            string regex = tmp[1].Trim();
+            terminals.Add( new Terminal( sym, new Regex( "\\G("+regex+")" ) ) );
         }
     }
 }

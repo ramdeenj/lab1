@@ -1,4 +1,5 @@
 //VarType.cs
+
 public class VarType{
     public static VarType fromToken(Token t){
         switch(t.lexeme){

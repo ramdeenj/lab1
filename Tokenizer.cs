@@ -1,37 +1,34 @@
+//Tokenizer.cs
+
+using System;
+using System.Collections.Generic;
+
 public class Tokenizer
 {
-    private string input = "";
-    private int index = 0;
-    private int line = 1;
-
-    private Token? peeked = null;
+    private string input;
+    private int index;
+    private int line;
+    private Stack<int> rewindStack = new();
 
     public Tokenizer()
     {
         Terminals.init();
+        line = 1;
     }
 
     public void setInput(string input)
     {
         this.input = input;
-        index = 0;
-        line = 1;
-        peeked = null;
+        this.index = 0;
+        this.line = 1;
     }
 
     public Token next()
     {
-        if (peeked != null)
-        {
-            Token t = peeked;
-            peeked = null;
-            return t;
-        }
-
         if (index >= input.Length)
-            return new Token("$", line, "");
+            return new Token("$$", line, "");
 
-        Terminals.Terminal? best = null;
+        Token best = null;
         int bestLen = 0;
 
         foreach (var t in Terminals.terminals)
@@ -39,44 +36,50 @@ public class Tokenizer
             var m = t.rex.Match(input, index);
             if (m.Success && m.Length > bestLen)
             {
-                best = t;
                 bestLen = m.Length;
+                best = new Token(t.sym, line, m.Value);
             }
         }
 
         if (best == null)
-        {
-            Utils.error($"Tokenizer error at line {line}");
-            throw new Exception();
-        }
+            throw new Exception($"Tokenizer error at line {line}");
 
-        string lexeme = input.Substring(index, bestLen);
+        rewindStack.Push(index);
+
         index += bestLen;
-
-        foreach (char c in lexeme)
-            if (c == '\n') line++;
+        line += best.lexeme.Split('\n').Length - 1;
 
         if (best.sym == "WHITESPACE")
             return next();
 
-        return new Token(best.sym, line, lexeme);
+        return best;
+    }
+
+    public string peek()
+    {
+        int save = index;
+        int saveLine = line;
+
+        Token t = next();
+
+        index = save;
+        line = saveLine;
+        rewindStack.Pop();
+
+        return t.sym == "$$" ? "" : t.lexeme;
     }
 
     public Token expect(string sym)
     {
         Token t = next();
         if (t.sym != sym)
-        {
-            Utils.error($"Expected {sym} but got {t}");
-            throw new Exception();
-        }
+            throw new Exception($"Expected {sym}, got {t.sym}");
         return t;
     }
 
-    public string peek()
+    public void rewind()
     {
-        if (peeked == null)
-            peeked = next();
-        return peeked.sym;
+        if (rewindStack.Count > 0)
+            index = rewindStack.Pop();
     }
 }

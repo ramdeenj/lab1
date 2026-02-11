@@ -1,19 +1,38 @@
 //ProgramNode.cs
+
+using System.Collections.Generic;
+
 public class ProgramNode : TreeNode
 {
-    public List<FuncdefNode> funcs = new();   
-    public static ProgramNode parse(Tokenizer T)
+    public List<FuncdefNode> functions;
+
+    public ProgramNode(List<FuncdefNode> functions)
     {
-        ProgramNode p = new();
-        while (true)
-        {
-            if( T.peek() == "FUNC" )
-                p.funcs.Add(FuncdefNode.parse(T));
-            else if( T.peek() == "$" )
-                break;
-            else
-                Utils.error("Unexpected thing");
-        }
-        return p;
+        this.functions = functions;
+    }
+
+public static ProgramNode parse(Tokenizer T)
+{
+    T.expect("FUNC");
+    Token name = T.expect("ID");
+    T.expect("LPAREN");
+    T.expect("RPAREN");
+    T.expect("LBRACE");
+    T.expect("RETURN");
+
+    ExprNode e = ExprNode.parse(T);
+
+    T.expect("RBRACE");
+
+    ReturnNode r = new ReturnNode(e);
+    StmtsNode s = new StmtsNode(new List<StmtNode> { r });
+    FuncdefNode f = new FuncdefNode(name.lexeme, s);
+
+    return new ProgramNode(new List<FuncdefNode> { f });
+}
+
+    public override List<TreeNode> getChildNodes()
+    {
+        return new List<TreeNode>(functions);
     }
 }

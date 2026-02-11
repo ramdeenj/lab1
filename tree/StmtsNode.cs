@@ -1,21 +1,18 @@
 //StmtsNode.cs
+
+using System.Collections.Generic;
+
 public class StmtsNode : TreeNode
 {
-    public List<StmtNode> stmts = new();
-    public static StmtsNode parse(Tokenizer T)
+    public List<StmtNode> statements;
+
+    public StmtsNode(List<StmtNode> statements)
     {
-        T.expect("LBRACE");
+        this.statements = statements;
+    }
 
-        var s = new StmtsNode();
-
-        while(true){
-            if( T.peek() == "RBRACE" )
-                break;
-            s.stmts.Add(StmtNode.parse(T));
-        }
-
-        T.expect("RBRACE");
-
-        return s;
+    public override List<TreeNode> getChildNodes()
+    {
+        return new List<TreeNode>(statements);
     }
 }
