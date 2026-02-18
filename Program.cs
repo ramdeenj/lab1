@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 public class StopIteration : Exception
 {
@@ -29,6 +30,25 @@ public class Program
         }
     }
 
+    // ---------- CUSTOM JSON WRITER ----------
+    static void WriteJson(ExprNode node, TextWriter w)
+    {
+        w.Write("{");
+        w.Write("\"token\":\"" + node.token.lexeme + "\"");
+        w.Write(",\"children\":[");
+
+        List<TreeNode> children = node.getChildNodes();
+
+        for (int i = 0; i < children.Count; i++)
+        {
+            WriteJson((ExprNode)children[i], w);
+            if (i < children.Count - 1)
+                w.Write(",");
+        }
+
+        w.Write("]}");
+    }
+
     public static void Main(string[] args)
     {
         if (args.Length == 0)
@@ -51,7 +71,6 @@ public class Program
         }
         catch (Exception e)
         {
-            // show the REAL error (very important for debugging)
             Console.Error.WriteLine(e.Message);
             Environment.Exit(1);
             return;
@@ -60,26 +79,24 @@ public class Program
         if (p == null)
             return;
 
-        Treedump.textTree(p, Console.Out);
-
+        // Walk tree and stop at first expression
         walk(p, (TreeNode n) =>
         {
             ExprNode e = n as ExprNode;
             if (e == null)
                 return;
 
+            // -------- WRITE DOT FILE --------
             using (var w = new StreamWriter("tree.dot"))
             {
                 w.WriteLine("graph foo {");
 
-                // write nodes
                 walk(e, (TreeNode c) =>
                 {
                     ExprNode ee = (ExprNode)c;
                     w.WriteLine($"{ee.unique} [label=\"{ee.token.lexeme}\"];");
                 });
 
-                // write edges
                 walk(e, (TreeNode c) =>
                 {
                     ExprNode ee = (ExprNode)c;
@@ -93,7 +110,13 @@ public class Program
                 w.WriteLine("}");
             }
 
-            // stop after first ExprNode
+            // -------- WRITE JSON FILE --------
+            using (var w = new StreamWriter("tree.json"))
+            {
+                WriteJson(e, w);
+            }
+
+            // stop after first expression
             throw new StopIteration();
         });
 

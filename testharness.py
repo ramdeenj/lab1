@@ -1,9 +1,11 @@
+#testharness.py
+
 #!/usr/bin/env python
 
 
 #set this equal to the path to your compiler executable
 #or else use the -c command line option
-COMPILER = "lab1.exe"
+COMPILER="bin/Debug/net8.0/lab1.exe"
 
 #can skip over some tests to get right to a specific one
 #Edit this or use the -s command line option
@@ -11,6 +13,7 @@ numToSkip=0
 
 #to run noninteractively, set this to False or use the -n command line option
 interactive=True
+
 
 import sys, os.path, getopt, subprocess, json
 
@@ -27,48 +30,25 @@ def done():
     sys.exit(0)
 
 def run(inp):
-    P = subprocess.Popen([COMPILER,inp],stdout=subprocess.PIPE)
+    P = subprocess.Popen([COMPILER,inp])
     o,e = P.communicate()
-    o = o.decode(errors="ignore")
-    if P.returncode != 0:
-        return "null"
-    else:
-        return o
+    return P.returncode
 
-def compare(actual,expected):
-    if expected == None and actual == None:
-        return True,True
-        
-    if expected == None and actual != None:
-        return False,False
-        
-    if expected != None and actual == None:
-        return False,False
+def compare(expected,actual):
+    if expected["token"] != actual["token"]:
+        print("Expected node symbol to be",expected["token"],"but it was",actual[symbolKey])
+        return False
 
-    if type(actual) != list :
-        print("Expected a list; got",type(actual))
-        return False,False
-        
-    if len(actual) != len(expected):
-        print("Expected list to have",len(expected),"tokens, but got",len(actual),"tokens")
-        return False,False
-    bonusOK=True
-    for i in range(len(expected)):
-        atoken = actual[i]
-        etoken = expected[i]
-        if atoken["sym"] != etoken["sym"]:
-            print("Token",i,": Expected sym to be",etoken["sym"],"but got",atoken["sym"])
-            return False,False
-        if atoken["line"] != etoken["line"]:
-            print("Token",i,": Expected line to be",etoken["line"],"but got",atoken["line"])
-            return False,False
-        if atoken["lexeme"] != etoken["lexeme"]:
-            print("Token",i,": Expected lexeme to be",etoken["lexeme"],"but got",atoken["lexeme"])
-            return False,False
-        if atoken.get("column") != etoken["column"]:
-            bonusOK=False
-    return True,bonusOK
+    if len(expected["children"]) != len(actual["children"]):
+        print("Child length mismatch for",expected["token"],": Expected",len(expected["children"]),"but got",len(actual["children"]))
+        return False
 
+    for i in range(len(expected["children"])):
+        ok = compare(expected["children"][i], actual["children"][i])
+        if not ok:
+            return False
+
+    return True
 
 
 opts,args = getopt.getopt(sys.argv[1:], "c:n:s:" )
@@ -101,24 +81,31 @@ numFailed=0
 for i in range(len(inputs)):
     dirname,fname = inputs[i]
     print("Test",i,"(",fname,")...")
-    allBonusOK=True
     if i >= numToSkip:
         inputfile = os.path.join(dirname,fname)
-        output = run(inputfile)
-        outputJ = json.loads(output)
-        with open(os.path.join(outputfolder,fname)) as fp:
-            data = fp.read()
-        expected = json.loads(data)
-        requiredOK, bonusOK = compare(outputJ,expected)
-        if allBonusOK and not bonusOK:
-            allBonusOK=False
-            print("NOTE: Bonus not matched")
-        if not requiredOK:
-            error("Mismatch")
-    else:
-        pass
+        rv = run(inputfile)
+        expectedfile = os.path.join("tests","outputs",fname.replace(".txt",".json"))
+        if not os.path.exists(expectedfile):
+            if rv == 0:
+                error("Expected failure, but compiler succeeded")
+            else:
+                numPassed += 1
+                continue
+        else:
+            if rv != 0:
+                error("Expected success, but compiler failed")
+            else:
+                with open(expectedfile) as fp:
+                    expectedJ = json.load(fp)
+                with open("tree.json") as fp:
+                    actualJ = json.load(fp)
+                if not compare(expectedJ,actualJ):
+                    error("Mismatch")
+                else:
+                    numPassed+=1
+                    pass
 
-print("All required functionality OK")
-if allBonusOK:
-    print("Bonus functionality OK")
+print(numPassed,"tests passed")
+print(numFailed,"tests failed")
+
 done()
