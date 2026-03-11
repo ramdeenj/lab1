@@ -22,7 +22,7 @@ public static ProgramNode parse(Tokenizer T)
 
     ExprNode e = ExprNode.parse(T);
 
-    // STRICT: expression must end here
+    // expression must end here
     Token next = T.next();
     if (next.sym != "RBRACE")
         throw new Exception("invalid syntax");

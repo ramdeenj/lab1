@@ -1,0 +1,3 @@
+func main(){
+    return 1 + foo(bar(2,3)) + 4
+}

@@ -1,0 +1,1 @@
+{"token":"+","children":[{"token":"*","children":[{"token":"1","children":[]},{"token":"func-call","children":[{"token":"foo","children":[]},{"token":"no-args","children":[]}]}]},{"token":"3","children":[]}]}

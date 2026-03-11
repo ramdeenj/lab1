@@ -1,0 +1,30 @@
+//CallNode.cs
+
+using System.Collections.Generic;
+
+public class CallNode : ExprNode
+{
+    public ExprNode function;
+    public ExprNode args;
+
+    public CallNode(ExprNode function, ExprNode args)
+        : base(new Token("FUNC_CALL", 0, "func-call"))
+    {
+        this.function = function;
+
+        if (args == null)
+        {
+            // required by expected JSON
+            this.args = new NoArgsNode();
+        }
+        else
+        {
+            this.args = args;
+        }
+    }
+
+    public override List<TreeNode> getChildNodes()
+    {
+        return new List<TreeNode> { function, args };
+    }
+}

@@ -27,7 +27,7 @@ public abstract class ExprNode : TreeNode
     // = (right associative, lowest precedence)
     static ExprNode parseAssign(Tokenizer T)
     {
-        ExprNode left = parseOrLogical(T);
+        ExprNode left = parseOr(T);
 
         if (T.peek() == "=")
         {
@@ -40,11 +40,26 @@ public abstract class ExprNode : TreeNode
     }
 
     // or
-    static ExprNode parseOrLogical(Tokenizer T)
+    static ExprNode parseOr(Tokenizer T)
+    {
+        ExprNode left = parseAnd(T);
+
+        while (T.peek() == "or")
+        {
+            Token op = T.next();
+            ExprNode right = parseAnd(T);
+            left = new BinOpNode(op, left, right);
+        }
+
+        return left;
+    }
+
+    // and
+    static ExprNode parseAnd(Tokenizer T)
     {
         ExprNode left = parseBitOr(T);
 
-        while (T.peek() == "or")
+        while (T.peek() == "and")
         {
             Token op = T.next();
             ExprNode right = parseBitOr(T);
@@ -72,24 +87,9 @@ public abstract class ExprNode : TreeNode
     // &
     static ExprNode parseBitAnd(Tokenizer T)
     {
-        ExprNode left = parseAndLogical(T);
-
-        while (T.peek() == "&")
-        {
-            Token op = T.next();
-            ExprNode right = parseAndLogical(T);
-            left = new BinOpNode(op, left, right);
-        }
-
-        return left;
-    }
-
-    // and
-    static ExprNode parseAndLogical(Tokenizer T)
-    {
         ExprNode left = parseEquality(T);
 
-        while (T.peek() == "and")
+        while (T.peek() == "&")
         {
             Token op = T.next();
             ExprNode right = parseEquality(T);
@@ -109,7 +109,6 @@ public abstract class ExprNode : TreeNode
             Token op = T.next();
             ExprNode right = parseRelational(T);
 
-            // prevent chaining like a==b==c
             if (T.peek() == "==" || T.peek() == "!=")
                 throw new System.Exception("invalid syntax");
 
@@ -119,7 +118,7 @@ public abstract class ExprNode : TreeNode
         return left;
     }
 
-    // < > <= >= (NOT chainable)
+    // < > <= >=  (NOT chainable)
     static ExprNode parseRelational(Tokenizer T)
     {
         ExprNode left = parseShift(T);
@@ -130,7 +129,6 @@ public abstract class ExprNode : TreeNode
             Token op = T.next();
             ExprNode right = parseShift(T);
 
-            // prevent chaining like a>b>c
             if (T.peek() == "<" || T.peek() == ">" ||
                 T.peek() == "<=" || T.peek() == ">=")
                 throw new System.Exception("invalid syntax");
@@ -156,6 +154,7 @@ public abstract class ExprNode : TreeNode
         return left;
     }
 
+    // + -
     static ExprNode parseAddSub(Tokenizer T)
     {
         ExprNode left = parseMulDiv(T);
@@ -170,6 +169,7 @@ public abstract class ExprNode : TreeNode
         return left;
     }
 
+    // * /
     static ExprNode parseMulDiv(Tokenizer T)
     {
         ExprNode left = parsePower(T);
@@ -187,7 +187,7 @@ public abstract class ExprNode : TreeNode
     // ** (right associative)
     static ExprNode parsePower(Tokenizer T)
     {
-        ExprNode left = parseDot(T);
+        ExprNode left = parsePostfix(T);
 
         if (T.peek() == "**")
         {
@@ -199,12 +199,15 @@ public abstract class ExprNode : TreeNode
         return left;
     }
 
-    // .
-    static ExprNode parseDot(Tokenizer T)
-    {
-        ExprNode left = parsePrimary(T);
+    // . and function calls (highest precedence)
+static ExprNode parsePostfix(Tokenizer T)
+{
+    ExprNode left = parsePrimary(T);
 
-        while (T.peek() == ".")
+    while (true)
+    {
+        // member access
+        if (T.peek() == ".")
         {
             Token op = T.next();
             Token next = T.next();
@@ -216,8 +219,59 @@ public abstract class ExprNode : TreeNode
             left = new BinOpNode(op, left, right);
         }
 
-        return left;
+        // array access
+        else if (T.peek() == "[")
+        {
+            T.next(); // consume [
+
+            ExprNode index = parse(T);   // FULL expression
+
+            T.expect("RBRACKET");
+
+            left = new ArrayAccessNode(left, index);
+        }
+
+        // function call
+        else if (T.peek() == "(")
+        {
+            T.next(); // consume '('
+
+            if (T.peek() == ")")
+            {
+                T.next(); // consume ')'
+                left = new CallNode(left, null);  // no-args
+            }
+            else
+            {
+                // FIRST ARGUMENT
+                ExprNode arg = parse(T);  // IMPORTANT: parse(), not parseAssign
+
+                // ADDITIONAL ARGUMENTS
+                while (T.peek() == ",")
+                {
+                    Token comma = T.next();
+
+                    if (T.peek() == ")" || T.peek() == ",")
+                        throw new System.Exception("invalid syntax");
+
+                    ExprNode rightArg = parse(T);  // IMPORTANT: parse()
+
+                    arg = new BinOpNode(comma, arg, rightArg);
+                }
+
+                T.expect("RPAREN");
+
+                left = new CallNode(left, arg);
+            }
+        }
+        else
+        {
+            break;
+        }
     }
+
+    return left;
+}
 
     static ExprNode parsePrimary(Tokenizer T)
     {
@@ -228,6 +282,13 @@ public abstract class ExprNode : TreeNode
 
         if (tok.sym == "ID")
             return new VarNode(tok);
+
+        if (tok.sym == "LPAREN")
+        {
+            ExprNode e = parse(T);
+            T.expect("RPAREN");
+            return e;
+        }
 
         throw new System.Exception("invalid expression");
     }

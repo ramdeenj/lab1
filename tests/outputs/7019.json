@@ -1,1 +1,1 @@
-{"token" : "and","children" : [{"token" : ">","children" : [{"token" : "a","children" : []},{"token" : "b","children" : []}]},{"token" : "<","children" : [{"token" : "c","children" : []},{"token" : "d","children" : []}]}]}
+{"token":"and","children":[{"token":">","children":[{"token":"a","children":[]},{"token":"b","children":[]}]},{"token":"<","children":[{"token":"c","children":[]},{"token":"d","children":[]}]}]}

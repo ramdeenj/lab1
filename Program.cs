@@ -30,7 +30,7 @@ public class Program
         }
     }
 
-    // ---------- CUSTOM JSON WRITER ----------
+    //JSON WRITER
     static void WriteJson(ExprNode node, TextWriter w)
     {
         w.Write("{");
@@ -86,7 +86,7 @@ public class Program
             if (e == null)
                 return;
 
-            // -------- WRITE DOT FILE --------
+            //WRITE DOT FILE
             using (var w = new StreamWriter("tree.dot"))
             {
                 w.WriteLine("graph foo {");
@@ -110,7 +110,7 @@ public class Program
                 w.WriteLine("}");
             }
 
-            // -------- WRITE JSON FILE --------
+            //WRITE JSON FILE
             using (var w = new StreamWriter("tree.json"))
             {
                 WriteJson(e, w);

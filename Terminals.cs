@@ -40,11 +40,15 @@ public static class Terminals
 
     ASSIGN :: =
     DOT :: \.
+    COMMA :: ,
 
     LPAREN :: \(
     RPAREN :: \)
     LBRACE :: \{
     RBRACE :: \}
+
+    LBRACKET :: \[
+    RBRACKET :: \]
 
 ";
 
@@ -64,7 +68,7 @@ public static class Terminals
 
     public static void init()
     {
-        terminals.Clear(); 
+        terminals.Clear();
 
         foreach (var line_ in terminalspec.Split('\n'))
         {

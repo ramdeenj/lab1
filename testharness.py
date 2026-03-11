@@ -36,7 +36,7 @@ def run(inp):
 
 def compare(expected,actual):
     if expected["token"] != actual["token"]:
-        print("Expected node symbol to be",expected["token"],"but it was",actual[symbolKey])
+        print("Expected node symbol to be",expected["token"],"but it was",actual["token"])
         return False
 
     if len(expected["children"]) != len(actual["children"]):
@@ -104,6 +104,8 @@ for i in range(len(inputs)):
                 else:
                     numPassed+=1
                     pass
+    else:
+        print("Skipping")
 
 print(numPassed,"tests passed")
 print(numFailed,"tests failed")
