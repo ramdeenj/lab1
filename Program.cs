@@ -1,51 +1,35 @@
-﻿//Program.cs
-
 using System;
 using System.IO;
 using System.Collections.Generic;
 
-public class StopIteration : Exception
-{
-}
+public class StopIteration : Exception { }
 
 public class Program
 {
     static void walk(TreeNode n, Action<TreeNode> callback)
     {
-        try
-        {
-            walkHelper(n, callback);
-        }
-        catch (StopIteration)
-        {
-        }
+        try { walkHelper(n, callback); }
+        catch (StopIteration) { }
     }
 
     static void walkHelper(TreeNode n, Action<TreeNode> callback)
     {
         callback(n);
         foreach (TreeNode c in n.getChildNodes())
-        {
             walkHelper(c, callback);
-        }
     }
 
-    //JSON WRITER
     static void WriteJson(ExprNode node, TextWriter w)
     {
         w.Write("{");
         w.Write("\"token\":\"" + node.token.lexeme + "\"");
         w.Write(",\"children\":[");
-
         List<TreeNode> children = node.getChildNodes();
-
         for (int i = 0; i < children.Count; i++)
         {
             WriteJson((ExprNode)children[i], w);
-            if (i < children.Count - 1)
-                w.Write(",");
+            if (i < children.Count - 1) w.Write(",");
         }
-
         w.Write("]}");
     }
 
@@ -63,8 +47,7 @@ public class Program
             T.setInput(r.ReadToEnd());
         }
 
-        ProgramNode? p = null;
-
+        ProgramNode p = null;
         try
         {
             p = ProgramNode.parse(T);
@@ -76,27 +59,22 @@ public class Program
             return;
         }
 
-        if (p == null)
-            return;
+        if (p == null) return;
 
-        // Walk tree and stop at first expression
         walk(p, (TreeNode n) =>
         {
             ExprNode e = n as ExprNode;
-            if (e == null)
-                return;
+            if (e == null) return;
 
-            //WRITE DOT FILE
+            // Write DOT file
             using (var w = new StreamWriter("tree.dot"))
             {
                 w.WriteLine("graph foo {");
-
                 walk(e, (TreeNode c) =>
                 {
                     ExprNode ee = (ExprNode)c;
                     w.WriteLine($"{ee.unique} [label=\"{ee.token.lexeme}\"];");
                 });
-
                 walk(e, (TreeNode c) =>
                 {
                     ExprNode ee = (ExprNode)c;
@@ -106,17 +84,15 @@ public class Program
                         w.WriteLine($"{ee.unique} -- {xx.unique};");
                     }
                 });
-
                 w.WriteLine("}");
             }
 
-            //WRITE JSON FILE
+            // Write JSON file
             using (var w = new StreamWriter("tree.json"))
             {
                 WriteJson(e, w);
             }
 
-            // stop after first expression
             throw new StopIteration();
         });
 

@@ -1,5 +1,3 @@
-//ArrayAccessNode.cs
-
 using System.Collections.Generic;
 
 public class ArrayAccessNode : ExprNode

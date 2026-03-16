@@ -1,19 +1,9 @@
 graph foo {
-8 [label="+"];
-6 [label="+"];
+3 [label="~"];
+2 [label="+"];
 0 [label="1"];
-5 [label="func-call"];
-1 [label="foo"];
-3 [label="func-call"];
-2 [label="bar"];
-4 [label="no-args"];
-7 [label="4"];
-8 -- 6;
-8 -- 7;
-6 -- 0;
-6 -- 5;
-5 -- 1;
-5 -- 3;
+1 [label="2"];
 3 -- 2;
-3 -- 4;
+2 -- 0;
+2 -- 1;
 }

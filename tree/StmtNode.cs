@@ -1,4 +1,1 @@
-//StmtNode.cs
-public abstract class StmtNode : TreeNode
-{
-}
+public abstract class StmtNode : TreeNode { }

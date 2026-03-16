@@ -1,5 +1,3 @@
-//CondNode.cs
-
 using System.Collections.Generic;
 
 public class CondNode : StmtNode

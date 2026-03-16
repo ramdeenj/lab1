@@ -1,5 +1,3 @@
-//FuncdefNode.cs
-
 using System.Collections.Generic;
 
 public class FuncdefNode : TreeNode

@@ -1,5 +1,3 @@
-//LoopNode.cs
-
 using System.Collections.Generic;
 
 public class LoopNode : StmtNode

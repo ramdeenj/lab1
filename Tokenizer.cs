@@ -1,5 +1,3 @@
-//Tokenizer.cs
-
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +6,7 @@ public class Tokenizer
     private string input;
     private int index;
     private int line;
-    private Stack<int> rewindStack = new();
+    private Stack<int> rewindStack = new Stack<int>();
 
     public Tokenizer()
     {
@@ -45,7 +43,6 @@ public class Tokenizer
             throw new Exception($"Tokenizer error at line {line}");
 
         rewindStack.Push(index);
-
         index += bestLen;
         line += best.lexeme.Split('\n').Length - 1;
 
@@ -59,13 +56,10 @@ public class Tokenizer
     {
         int save = index;
         int saveLine = line;
-
         Token t = next();
-
         index = save;
         line = saveLine;
         rewindStack.Pop();
-
         return t.sym == "$$" ? "" : t.lexeme;
     }
 

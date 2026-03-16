@@ -1,12 +1,13 @@
-//Token.cs
-public class Token {
+public class Token
+{
     public string sym;
     public string lexeme;
     public int line;
+
     public Token(string sym, int line, string lexeme)
     {
         this.sym = sym;
-        this.line= line;
+        this.line = line;
         this.lexeme = lexeme;
     }
 

@@ -1,5 +1,3 @@
-//StmtsNode.cs
-
 using System.Collections.Generic;
 
 public class StmtsNode : TreeNode

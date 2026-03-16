@@ -1,5 +1,3 @@
-//ReturnNode.cs
-
 using System.Collections.Generic;
 
 public class ReturnNode : StmtNode

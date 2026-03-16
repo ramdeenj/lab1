@@ -1,5 +1,3 @@
-//BinOpNode.cs
-
 using System.Collections.Generic;
 
 public class BinOpNode : ExprNode
@@ -7,8 +5,7 @@ public class BinOpNode : ExprNode
     public ExprNode left;
     public ExprNode right;
 
-    public BinOpNode(Token tok, ExprNode left, ExprNode right)
-        : base(tok)
+    public BinOpNode(Token tok, ExprNode left, ExprNode right) : base(tok)
     {
         this.left = left;
         this.right = right;

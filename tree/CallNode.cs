@@ -1,5 +1,3 @@
-//CallNode.cs
-
 using System.Collections.Generic;
 
 public class CallNode : ExprNode
@@ -11,10 +9,8 @@ public class CallNode : ExprNode
         : base(new Token("FUNC_CALL", 0, "func-call"))
     {
         this.function = function;
-
         if (args == null)
         {
-            // required by expected JSON
             this.args = new NoArgsNode();
         }
         else
