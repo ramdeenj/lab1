@@ -1,0 +1,3 @@
+func main() {
+    false and 55 and "npRVRRzG"
+}

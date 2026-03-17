@@ -1,0 +1,3 @@
+func main() {
+    "IFIpzady" and 7.12 and 6.18
+}

@@ -1,0 +1,3 @@
+func main() {
+    0.82 - "rqiIpWHL" - 5.5
+}

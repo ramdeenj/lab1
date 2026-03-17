@@ -1,0 +1,5 @@
+func main() : int{
+    if "cnfsUdPb" ^ 51{
+        return 0
+    }
+}

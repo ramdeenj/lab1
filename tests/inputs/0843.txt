@@ -1,0 +1,3 @@
+func main() {
+    40 >>> "UpStRmpZ" >>> 2.77
+}

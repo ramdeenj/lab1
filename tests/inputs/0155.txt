@@ -1,0 +1,3 @@
+func main() {
+    "AqidaDMh" * 46 * false
+}

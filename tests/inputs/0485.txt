@@ -1,0 +1,3 @@
+func main() {
+    "YcEoyxFZ" / "gvRsXdfU" / true
+}

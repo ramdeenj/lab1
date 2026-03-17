@@ -1,0 +1,3 @@
+func main() {
+    false or 4.54 or "vpBSMEBz"
+}

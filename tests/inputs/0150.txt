@@ -1,0 +1,3 @@
+func main() {
+    6.88 * false * true
+}

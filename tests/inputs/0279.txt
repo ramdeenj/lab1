@@ -1,0 +1,3 @@
+func main() {
+    45 + 8.07 + "EWPuqoGx"
+}

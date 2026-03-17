@@ -1,0 +1,3 @@
+func main() {
+    "PGDZkjfJ" << 0.55 << false
+}

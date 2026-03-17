@@ -1,0 +1,3 @@
+func main() {
+    5.47 >>> "AsfweTAx" >>> 55
+}

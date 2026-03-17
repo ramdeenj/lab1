@@ -1,0 +1,5 @@
+func main() : int{
+    while "ZEdSxTUF" < 5.66{
+        return 0
+    }
+}

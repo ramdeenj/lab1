@@ -1,0 +1,3 @@
+func main() {
+    "CGvDiLKy" or 3 or "fgHEPucl"
+}

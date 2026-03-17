@@ -1,0 +1,3 @@
+func main() {
+    0.91 >>> 4.52 >>> "TXaQJTAA"
+}

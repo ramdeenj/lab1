@@ -1,0 +1,3 @@
+func main() {
+    1.65 & "vcjtbjAH" & true
+}

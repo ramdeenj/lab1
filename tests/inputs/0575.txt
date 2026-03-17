@@ -1,0 +1,3 @@
+func main() {
+    2.38 << "mOBheAVn" << 2.06
+}

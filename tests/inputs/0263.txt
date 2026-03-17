@@ -1,0 +1,3 @@
+func main() {
+    true ** "SFwKRcgJ" ** 8.5
+}

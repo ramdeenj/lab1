@@ -1,0 +1,3 @@
+func main() {
+    "EVKYKuEj" << 9.64 << 11
+}

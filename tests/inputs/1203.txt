@@ -1,0 +1,3 @@
+func main() {
+    "OjaSbMEz" | "erXLArfr" | 1.07
+}

@@ -1,0 +1,3 @@
+func main() {
+    "rwDCGoyd" / true / 1.27
+}

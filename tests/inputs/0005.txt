@@ -1,0 +1,5 @@
+func main() : int{
+    while 28 != "clRzAwzK"{
+        return 0
+    }
+}

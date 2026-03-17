@@ -1,0 +1,3 @@
+func main() {
+    true and 6.88 and "AEAaGhGr"
+}

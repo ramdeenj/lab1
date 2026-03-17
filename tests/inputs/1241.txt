@@ -1,0 +1,5 @@
+func main() : int{
+    while not false{
+        return 0
+    }
+}

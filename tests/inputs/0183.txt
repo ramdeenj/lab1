@@ -1,0 +1,3 @@
+func main() {
+    false * "zjXFyZAQ" * 5.49
+}

@@ -1,0 +1,3 @@
+func main() {
+    "ZeTevwiO" and false and false
+}

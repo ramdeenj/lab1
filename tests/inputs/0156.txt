@@ -1,0 +1,5 @@
+func main() : int{
+    while "ocwDNRjI" * 36{
+        return 0
+    }
+}

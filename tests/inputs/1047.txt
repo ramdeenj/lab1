@@ -1,0 +1,3 @@
+func main() {
+    "zLQysPfL" and true and 43
+}

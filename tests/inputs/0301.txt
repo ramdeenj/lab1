@@ -1,0 +1,5 @@
+func main() : int{
+    while 9.71 + 3.79{
+        return 0
+    }
+}

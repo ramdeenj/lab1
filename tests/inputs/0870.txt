@@ -1,0 +1,3 @@
+func main() {
+    0.08 >>> true >>> true
+}

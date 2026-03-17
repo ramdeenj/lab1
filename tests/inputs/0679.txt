@@ -1,0 +1,5 @@
+func main() : int{
+    while "pKgefKEw" == false{
+        return 0
+    }
+}

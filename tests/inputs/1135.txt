@@ -1,0 +1,3 @@
+func main() {
+    true or 89 or true
+}

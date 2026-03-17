@@ -1,0 +1,5 @@
+func main() : int{
+    if "shJdpcFu" ^ 5.12{
+        return 0
+    }
+}

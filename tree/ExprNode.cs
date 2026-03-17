@@ -5,6 +5,7 @@ public abstract class ExprNode : TreeNode
     private static int nextId = 0;
     public int unique;
     public Token token;
+    public VarType type = null;
 
     protected ExprNode(Token token)
     {
@@ -16,6 +17,8 @@ public abstract class ExprNode : TreeNode
     {
         return new List<TreeNode>();
     }
+
+    public abstract void setType();
 
     public static ExprNode parse(Tokenizer T)
     {
@@ -71,8 +74,20 @@ public abstract class ExprNode : TreeNode
 
     static ExprNode parseBitOr(Tokenizer T)
     {
-        ExprNode left = parseBitAnd(T);
+        ExprNode left = parseBitXor(T);
         while (T.peek() == "|")
+        {
+            Token op = T.next();
+            ExprNode right = parseBitXor(T);
+            left = new BinOpNode(op, left, right);
+        }
+        return left;
+    }
+
+    static ExprNode parseBitXor(Tokenizer T)
+    {
+        ExprNode left = parseBitAnd(T);
+        while (T.peek() == "^")
         {
             Token op = T.next();
             ExprNode right = parseBitAnd(T);
@@ -124,7 +139,7 @@ public abstract class ExprNode : TreeNode
     static ExprNode parseShift(Tokenizer T)
     {
         ExprNode left = parseAddSub(T);
-        while (T.peek() == "<<" || T.peek() == ">>")
+        while (T.peek() == "<<" || T.peek() == ">>" || T.peek() == ">>>")
         {
             Token op = T.next();
             ExprNode right = parseAddSub(T);
@@ -162,13 +177,13 @@ public abstract class ExprNode : TreeNode
         if (T.peek() == "~")
         {
             Token op = T.next();
-            ExprNode operand = parsePower(T);
+            ExprNode operand = parseUnary(T);
             return new UnaryNode(op, operand);
         }
         if (T.peek() == "-")
         {
             Token op = T.next();
-            ExprNode operand = parsePower(T);
+            ExprNode operand = parseUnary(T);
             return new UnaryNode(op, operand);
         }
         return parsePower(T);
@@ -241,6 +256,9 @@ public abstract class ExprNode : TreeNode
     {
         Token tok = T.next();
         if (tok.sym == "NUM") return new NumNode(tok);
+        if (tok.sym == "FLOAT") return new FloatNode(tok);
+        if (tok.sym == "STRING") return new StringNode(tok);
+        if (tok.sym == "TRUE" || tok.sym == "FALSE") return new BoolNode(tok);
         if (tok.sym == "ID") return new VarNode(tok);
         if (tok.sym == "LPAREN")
         {

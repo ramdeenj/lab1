@@ -1,0 +1,3 @@
+func main() {
+    "XjDAtjWH" and 36 and "BPbslZoU"
+}

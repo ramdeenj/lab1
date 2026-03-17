@@ -1,0 +1,5 @@
+func main() : int{
+    while true & 82{
+        return 0
+    }
+}

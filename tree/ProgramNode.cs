@@ -16,18 +16,64 @@ public class ProgramNode : TreeNode
         Token name = T.expect("ID");
         T.expect("LPAREN");
         T.expect("RPAREN");
+
+        // Optional return type annotation: ": int" etc.
+        if (T.peek() == ":")
+        {
+            T.next(); // consume ":"
+            T.next(); // consume the type (int, float, etc.)
+        }
+
         T.expect("LBRACE");
-        T.expect("RETURN");
-        ExprNode e = ExprNode.parse(T);
+        StmtsNode body = parseStmts(T);
+        T.expect("RBRACE");
 
-        Token next = T.next();
-        if (next.sym != "RBRACE")
-            throw new Exception("invalid syntax");
-
-        ReturnNode r = new ReturnNode(e);
-        StmtsNode s = new StmtsNode(new List<StmtNode> { r });
-        FuncdefNode f = new FuncdefNode(name.lexeme, s);
+        FuncdefNode f = new FuncdefNode(name.lexeme, body);
         return new ProgramNode(new List<FuncdefNode> { f });
+    }
+
+    static StmtsNode parseStmts(Tokenizer T)
+    {
+        var stmts = new List<StmtNode>();
+        while (T.peek() != "}" && T.peek() != "")
+        {
+            stmts.Add(parseStmt(T));
+        }
+        return new StmtsNode(stmts);
+    }
+
+    static StmtNode parseStmt(Tokenizer T)
+    {
+        if (T.peek() == "return")
+        {
+            T.next();
+            ExprNode e = ExprNode.parse(T);
+            return new ReturnNode(e);
+        }
+        else if (T.peek() == "if")
+        {
+            T.next();
+            ExprNode cond = ExprNode.parse(T);
+            T.expect("LBRACE");
+            StmtsNode body = parseStmts(T);
+            T.expect("RBRACE");
+            return new CondNode(cond, body);
+        }
+        else if (T.peek() == "while")
+        {
+            T.next();
+            ExprNode cond = ExprNode.parse(T);
+            T.expect("LBRACE");
+            StmtsNode body = parseStmts(T);
+            T.expect("RBRACE");
+            return new LoopNode(cond, body);
+        }
+        else
+        {
+            // Standalone expression statement
+            ExprNode e = ExprNode.parse(T);
+            return new ReturnNode(e); // wrap as return-like for tree purposes
+        }
     }
 
     public override List<TreeNode> getChildNodes()

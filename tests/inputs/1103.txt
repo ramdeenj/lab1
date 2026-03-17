@@ -1,0 +1,3 @@
+func main() {
+    8.1 or "onYxKBfF" or 0.06
+}

@@ -1,0 +1,3 @@
+func main() {
+    35 * true * 6
+}

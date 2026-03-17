@@ -1,0 +1,3 @@
+func main() {
+    0.96 | "mwKiUUrz" | "TRrssXGi"
+}

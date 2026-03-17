@@ -1,0 +1,5 @@
+func main() : int{
+    while false and "DQQLcEfM"{
+        return 0
+    }
+}

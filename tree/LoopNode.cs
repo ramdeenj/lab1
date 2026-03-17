@@ -15,4 +15,10 @@ public class LoopNode : StmtNode
     {
         return new List<TreeNode> { condition, body };
     }
+
+    public override void typeCheck()
+    {
+        if (condition.type != null && !(condition.type is BoolType))
+            Utils.error($"Type error: 'while' condition must be bool, got {condition.type.GetType().Name}");
+    }
 }

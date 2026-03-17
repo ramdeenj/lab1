@@ -15,4 +15,10 @@ public class CondNode : StmtNode
     {
         return new List<TreeNode> { condition, thenBranch };
     }
+
+    public override void typeCheck()
+    {
+        if (condition.type != null && !(condition.type is BoolType))
+            Utils.error($"Type error: 'if' condition must be bool, got {condition.type.GetType().Name}");
+    }
 }

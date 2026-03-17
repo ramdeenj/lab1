@@ -1,0 +1,3 @@
+func main() {
+    "VHzgQiyk" >> false >> 88
+}

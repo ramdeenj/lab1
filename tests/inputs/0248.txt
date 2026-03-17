@@ -1,0 +1,3 @@
+func main() {
+    "FlqJWTps" ** false ** 1.32
+}

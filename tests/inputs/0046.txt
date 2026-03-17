@@ -1,0 +1,5 @@
+func main() : int{
+    while 19 & "MSNDlviD"{
+        return 0
+    }
+}

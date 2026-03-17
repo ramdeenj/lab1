@@ -1,0 +1,5 @@
+func main() : int{
+    while "VygRASuT" * 8.57{
+        return 0
+    }
+}

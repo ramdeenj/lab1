@@ -1,0 +1,5 @@
+func main() : int{
+    if 26 ^ "ihwQjenu"{
+        return 0
+    }
+}

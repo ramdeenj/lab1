@@ -1,0 +1,5 @@
+func main() : int{
+    if 3.99 and false{
+        return 0
+    }
+}

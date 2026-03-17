@@ -16,4 +16,9 @@ public class ArrayAccessNode : ExprNode
     {
         return new List<TreeNode> { array, index };
     }
+
+    public override void setType()
+    {
+        // Type unknown without array type inf
+    }
 }

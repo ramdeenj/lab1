@@ -1,0 +1,3 @@
+func main() {
+    77 << 5 << "NUJFtPWZ"
+}

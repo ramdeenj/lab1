@@ -1,0 +1,3 @@
+func main() {
+    "ftcjSisf" >>> "MkLiWUud" >>> 2.81
+}

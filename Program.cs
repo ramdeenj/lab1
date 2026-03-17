@@ -1,36 +1,21 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
 
-public class StopIteration : Exception { }
-
 public class Program
 {
-    static void walk(TreeNode n, Action<TreeNode> callback)
+    static void walkPostorder(TreeNode n, Action<TreeNode> callback)
     {
-        try { walkHelper(n, callback); }
-        catch (StopIteration) { }
+        foreach (TreeNode c in n.getChildNodes())
+            walkPostorder(c, callback);
+        callback(n);
     }
 
-    static void walkHelper(TreeNode n, Action<TreeNode> callback)
+    static void walkPreorder(TreeNode n, Action<TreeNode> callback)
     {
         callback(n);
         foreach (TreeNode c in n.getChildNodes())
-            walkHelper(c, callback);
-    }
-
-    static void WriteJson(ExprNode node, TextWriter w)
-    {
-        w.Write("{");
-        w.Write("\"token\":\"" + node.token.lexeme + "\"");
-        w.Write(",\"children\":[");
-        List<TreeNode> children = node.getChildNodes();
-        for (int i = 0; i < children.Count; i++)
-        {
-            WriteJson((ExprNode)children[i], w);
-            if (i < children.Count - 1) w.Write(",");
-        }
-        w.Write("]}");
+            walkPreorder(c, callback);
     }
 
     public static void Main(string[] args)
@@ -59,41 +44,16 @@ public class Program
             return;
         }
 
-        if (p == null) return;
-
-        walk(p, (TreeNode n) =>
+        // Postorder walk: set types bottom-up
+        walkPostorder(p, (TreeNode n) =>
         {
-            ExprNode e = n as ExprNode;
-            if (e == null) return;
+            (n as ExprNode)?.setType();
+        });
 
-            // Write DOT file
-            using (var w = new StreamWriter("tree.dot"))
-            {
-                w.WriteLine("graph foo {");
-                walk(e, (TreeNode c) =>
-                {
-                    ExprNode ee = (ExprNode)c;
-                    w.WriteLine($"{ee.unique} [label=\"{ee.token.lexeme}\"];");
-                });
-                walk(e, (TreeNode c) =>
-                {
-                    ExprNode ee = (ExprNode)c;
-                    foreach (TreeNode x in ee.getChildNodes())
-                    {
-                        ExprNode xx = (ExprNode)x;
-                        w.WriteLine($"{ee.unique} -- {xx.unique};");
-                    }
-                });
-                w.WriteLine("}");
-            }
-
-            // Write JSON file
-            using (var w = new StreamWriter("tree.json"))
-            {
-                WriteJson(e, w);
-            }
-
-            throw new StopIteration();
+        // Preorder walk: type check statements
+        walkPreorder(p, (TreeNode n) =>
+        {
+            n.typeCheck();
         });
 
         Environment.Exit(0);

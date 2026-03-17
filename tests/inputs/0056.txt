@@ -1,0 +1,5 @@
+func main() : int{
+    if 3.23 & 96{
+        return 0
+    }
+}

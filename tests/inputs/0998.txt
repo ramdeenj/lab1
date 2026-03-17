@@ -1,0 +1,3 @@
+func main() {
+    66 and 6.92 and 1.35
+}

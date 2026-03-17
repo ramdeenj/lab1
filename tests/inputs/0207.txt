@@ -1,0 +1,3 @@
+func main() {
+    48 ** false ** 58
+}

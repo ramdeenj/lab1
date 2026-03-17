@@ -1,0 +1,5 @@
+func main() : int{
+    if 1.05 < "kruHOvgA"{
+        return 0
+    }
+}

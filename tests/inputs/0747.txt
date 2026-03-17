@@ -1,0 +1,5 @@
+func main() : int{
+    while true >= 8.71{
+        return 0
+    }
+}

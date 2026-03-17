@@ -1,0 +1,5 @@
+func main() : int{
+    if "AbFSqome" << 2.04{
+        return 0
+    }
+}

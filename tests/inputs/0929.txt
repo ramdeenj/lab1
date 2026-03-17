@@ -1,0 +1,3 @@
+func main() {
+    21 ^ true ^ "SMysnRDd"
+}

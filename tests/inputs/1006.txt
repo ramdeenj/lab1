@@ -1,0 +1,5 @@
+func main() : int{
+    if 39 and "nVicDIBe"{
+        return 0
+    }
+}

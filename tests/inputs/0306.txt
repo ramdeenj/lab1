@@ -1,0 +1,5 @@
+func main() : int{
+    if 5.63 + "iSTKttso"{
+        return 0
+    }
+}

@@ -7,22 +7,32 @@ public static class Terminals
 WHITESPACE :: [ \t\r\n]+
 FUNC :: func
 RETURN :: return
+IF :: if
+WHILE :: while
+TRUE :: true
+FALSE :: false
+FLOAT :: [0-9]+\.[0-9]+
 NUM :: [0-9]+
+STRING :: ""[^""]*""
 ID :: [a-zA-Z_][a-zA-Z0-9_]*
 POWER :: \*\*
-SHIFTLEFT :: 
+SHIFTLEFT :: << 
+SHIFTRIGHT3 :: >>>
+SHIFTRIGHT3 :: >>>
+SHIFTRIGHT3 :: >>>
 SHIFTRIGHT :: >>
 EQ :: ==
 NEQ :: !=
 LE :: <=
 GE :: >=
-LT :: 
+LT :: < 
 GT :: >
 ANDKW :: and
 ORKW :: or
 NOTKW :: not
 AND :: &
 OR :: \|
+XOR :: \^
 BITNOT :: ~
 PLUS :: \+
 MINUS :: -
@@ -37,6 +47,7 @@ LBRACE :: \{
 RBRACE :: \}
 LBRACKET :: \[
 RBRACKET :: \]
+COLON :: :
 ";
 
     public class Terminal
@@ -68,3 +79,7 @@ RBRACKET :: \]
         }
     }
 }
+
+
+
+

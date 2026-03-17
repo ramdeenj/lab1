@@ -1,0 +1,3 @@
+func main() {
+    50 / 3.4 / "nYzVcVbp"
+}

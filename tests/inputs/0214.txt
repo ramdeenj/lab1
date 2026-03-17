@@ -1,0 +1,3 @@
+func main() {
+    2.61 ** 47 ** "JreEFFFb"
+}

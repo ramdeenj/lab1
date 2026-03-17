@@ -1,0 +1,3 @@
+func main() {
+    8 << "MpczIFzV" << 1.25
+}

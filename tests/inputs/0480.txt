@@ -1,0 +1,3 @@
+func main() {
+    "wuciNbGv" / 8.49 / true
+}

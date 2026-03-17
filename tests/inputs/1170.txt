@@ -1,0 +1,3 @@
+func main() {
+    19 | false | false
+}

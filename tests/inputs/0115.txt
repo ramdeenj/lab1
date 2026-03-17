@@ -1,0 +1,3 @@
+func main() {
+    48 * 43 * true
+}

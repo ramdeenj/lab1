@@ -1,0 +1,3 @@
+func main() {
+    "eTFZtCgk" << "hzkrnJHw" << false
+}

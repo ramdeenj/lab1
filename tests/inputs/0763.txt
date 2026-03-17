@@ -1,0 +1,3 @@
+func main() {
+    99 >> "JXZOxluS" >> 1.37
+}

@@ -17,4 +17,5 @@ public class VarType
 public class IntType : VarType { }
 public class FloatType : VarType { }
 public class StringType : VarType { }
+public class BoolType : VarType { }
 public class VoidType : VarType { }

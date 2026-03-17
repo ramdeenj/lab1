@@ -1,0 +1,3 @@
+func main() {
+    "metpXLYf" ^ 60 ^ "IKMOCawA"
+}

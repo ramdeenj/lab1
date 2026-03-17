@@ -1,0 +1,5 @@
+func main() : int{
+    if 62 >> 70{
+        return 0
+    }
+}

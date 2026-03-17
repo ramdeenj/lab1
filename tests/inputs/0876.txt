@@ -1,0 +1,5 @@
+func main() : int{
+    if "YrTUKouC" >>> 95{
+        return 0
+    }
+}

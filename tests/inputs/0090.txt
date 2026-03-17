@@ -1,0 +1,3 @@
+func main() {
+    "NaYxlsBw" & false & false
+}

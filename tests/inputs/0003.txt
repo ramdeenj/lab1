@@ -1,0 +1,5 @@
+func main() : int{
+    if 13 != 6.92{
+        return 0
+    }
+}

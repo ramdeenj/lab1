@@ -1,0 +1,3 @@
+func main() {
+    false >> 5.02 >> "LwgRZOwk"
+}

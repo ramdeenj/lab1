@@ -1,0 +1,3 @@
+func main() {
+    false ** 5.14 ** false
+}

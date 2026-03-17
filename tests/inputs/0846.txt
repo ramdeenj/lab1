@@ -1,0 +1,5 @@
+func main() : int{
+    while 70 >>> "DBxZhwFG"{
+        return 0
+    }
+}

@@ -1,0 +1,3 @@
+func main() {
+    "MAtvyAkh" >> 15 >> true
+}

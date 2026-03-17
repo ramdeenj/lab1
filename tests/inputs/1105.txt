@@ -1,0 +1,3 @@
+func main() {
+    6.55 or "RhcaPLns" or true
+}

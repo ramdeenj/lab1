@@ -1,0 +1,5 @@
+func main() : int{
+    while "wUHdHhIf" | 7.8{
+        return 0
+    }
+}

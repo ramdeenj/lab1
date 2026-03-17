@@ -1,0 +1,5 @@
+func main() : int{
+    while "LKNzMICb" << "FrbMoJmQ"{
+        return 0
+    }
+}

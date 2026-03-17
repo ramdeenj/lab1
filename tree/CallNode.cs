@@ -9,18 +9,16 @@ public class CallNode : ExprNode
         : base(new Token("FUNC_CALL", 0, "func-call"))
     {
         this.function = function;
-        if (args == null)
-        {
-            this.args = new NoArgsNode();
-        }
-        else
-        {
-            this.args = args;
-        }
+        this.args = args ?? new NoArgsNode();
     }
 
     public override List<TreeNode> getChildNodes()
     {
         return new List<TreeNode> { function, args };
+    }
+
+    public override void setType()
+    {
+        // Return type unknown without function signatures
     }
 }

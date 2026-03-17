@@ -1,0 +1,3 @@
+func main() {
+    "mtNZPjUx" - 2.89 - false
+}

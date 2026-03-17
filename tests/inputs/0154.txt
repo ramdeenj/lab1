@@ -1,0 +1,3 @@
+func main() {
+    "sfSqZwjC" * 58 * "FUQUHxZg"
+}

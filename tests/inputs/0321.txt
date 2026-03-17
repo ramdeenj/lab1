@@ -1,0 +1,5 @@
+func main() : int{
+    while "VmJUtUuW" + 9.98{
+        return 0
+    }
+}

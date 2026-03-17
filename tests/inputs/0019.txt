@@ -1,0 +1,5 @@
+func main() : int{
+    while "pdJQIPvj" != 5.51{
+        return 0
+    }
+}

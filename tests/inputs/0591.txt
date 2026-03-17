@@ -1,0 +1,3 @@
+func main() {
+    "bKDGVNMa" << 7.13 << "juuiQqST"
+}

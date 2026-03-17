@@ -1,0 +1,3 @@
+func main() {
+    "NVaTyzfX" >>> 59 >>> 89
+}

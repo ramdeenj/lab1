@@ -1,0 +1,3 @@
+func main() {
+    false ** 9.25 ** "MXrkcdxS"
+}

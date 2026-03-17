@@ -1,0 +1,5 @@
+func main() : int{
+    if 89 == 19{
+        return 0
+    }
+}

@@ -1,0 +1,3 @@
+func main() {
+    72 or 5.48 or "WVrTZDop"
+}

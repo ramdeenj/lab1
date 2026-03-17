@@ -1,0 +1,3 @@
+func main() {
+    "TqAwGyHm" | 26 | true
+}

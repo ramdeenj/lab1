@@ -1,0 +1,5 @@
+func main() : int{
+    while false >= "nEMUfcVn"{
+        return 0
+    }
+}

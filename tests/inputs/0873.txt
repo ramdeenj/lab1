@@ -1,0 +1,3 @@
+func main() {
+    "yCVFwJDR" >>> 99 >>> 4.01
+}

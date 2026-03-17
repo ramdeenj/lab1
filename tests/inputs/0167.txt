@@ -1,0 +1,3 @@
+func main() {
+    "SWXbJPha" * true * 21
+}

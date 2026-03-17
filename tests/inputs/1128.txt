@@ -1,0 +1,3 @@
+func main() {
+    "nCXXLpjt" or true or 5.74
+}

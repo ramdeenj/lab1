@@ -1,0 +1,3 @@
+func main() {
+    "UJcEecoT" ** "yRlDWgET" ** 4.72
+}

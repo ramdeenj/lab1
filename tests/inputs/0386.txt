@@ -1,0 +1,5 @@
+func main() : int{
+    if 8.28 - "qanxBPNE"{
+        return 0
+    }
+}

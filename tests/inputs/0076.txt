@@ -1,0 +1,5 @@
+func main() : int{
+    while "QLlQCGmb" & 44{
+        return 0
+    }
+}

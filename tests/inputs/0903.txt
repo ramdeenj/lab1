@@ -1,0 +1,3 @@
+func main() {
+    true >>> "GCdWJIQX" >>> 9.1
+}

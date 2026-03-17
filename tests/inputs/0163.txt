@@ -1,0 +1,3 @@
+func main() {
+    "OxaCUvet" * "zYYqypJf" * 9.87
+}

@@ -1,0 +1,5 @@
+func main() : int{
+    if 16 ** 72{
+        return 0
+    }
+}

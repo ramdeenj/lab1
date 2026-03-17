@@ -1,0 +1,3 @@
+func main() {
+    "LFnYnrPf" * true * 2.37
+}

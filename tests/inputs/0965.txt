@@ -1,0 +1,3 @@
+func main() {
+    "DaTTuxcS" ^ "oLHIMAnw" ^ false
+}

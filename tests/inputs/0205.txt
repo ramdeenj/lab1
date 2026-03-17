@@ -1,0 +1,3 @@
+func main() {
+    82 ** "BDeZbrGf" ** false
+}

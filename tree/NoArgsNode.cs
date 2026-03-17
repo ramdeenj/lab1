@@ -8,4 +8,6 @@ public class NoArgsNode : ExprNode
     {
         return new List<TreeNode>();
     }
+
+    public override void setType() { }
 }

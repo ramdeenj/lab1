@@ -1,0 +1,3 @@
+func main() {
+    "PTJqhOaT" - 35 - 7
+}

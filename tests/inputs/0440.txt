@@ -1,0 +1,3 @@
+func main() {
+    76 / 1.39 / false
+}

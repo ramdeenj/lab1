@@ -1,0 +1,3 @@
+func main() {
+    13 and "hxqvTBkw" and 39
+}

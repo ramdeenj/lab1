@@ -1,0 +1,3 @@
+func main() {
+    88 ^ true ^ 48
+}

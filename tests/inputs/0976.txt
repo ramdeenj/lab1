@@ -1,0 +1,5 @@
+func main() : int{
+    if false ^ 23{
+        return 0
+    }
+}

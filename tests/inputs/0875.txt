@@ -1,0 +1,3 @@
+func main() {
+    "CMdvxGhq" >>> 26 >>> false
+}

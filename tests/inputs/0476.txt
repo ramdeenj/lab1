@@ -1,0 +1,5 @@
+func main() : int{
+    while "fIMYjgpf" / 52{
+        return 0
+    }
+}

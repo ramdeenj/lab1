@@ -1,0 +1,5 @@
+func main() : int{
+    while 6.1 or "LtfnFoyT"{
+        return 0
+    }
+}

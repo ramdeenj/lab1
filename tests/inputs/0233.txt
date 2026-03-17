@@ -1,0 +1,3 @@
+func main() {
+    "rlfhqTCO" ** 50 ** 6.13
+}

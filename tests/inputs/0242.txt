@@ -1,0 +1,3 @@
+func main() {
+    "Lxofdwkw" ** "lcrkponU" ** 80
+}

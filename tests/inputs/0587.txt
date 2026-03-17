@@ -1,0 +1,3 @@
+func main() {
+    "afYWiYGe" << 73 << true
+}

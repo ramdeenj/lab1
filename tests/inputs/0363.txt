@@ -1,0 +1,3 @@
+func main() {
+    41 - "PAQYPcwR" - 9.76
+}

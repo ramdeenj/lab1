@@ -1,0 +1,3 @@
+func main() {
+    42 or 50 or "kAgtxfeb"
+}

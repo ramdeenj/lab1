@@ -1,0 +1,5 @@
+func main() : int{
+    if 5.74 ^ 91{
+        return 0
+    }
+}

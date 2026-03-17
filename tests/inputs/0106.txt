@@ -1,0 +1,5 @@
+func main() : int{
+    if true & "sxTrmzHy"{
+        return 0
+    }
+}

@@ -1,0 +1,3 @@
+func main() {
+    "TjAjaFOH" * 4.72 * 9.69
+}

@@ -1,0 +1,3 @@
+func main() {
+    26 and 7.41 and "CdYthHAT"
+}

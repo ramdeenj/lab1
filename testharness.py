@@ -1,5 +1,3 @@
-#testharness.py
-
 #!/usr/bin/env python
 
 
@@ -20,6 +18,12 @@ import sys, os.path, getopt, subprocess, json
 
 def error(msg):
     print(msg)
+    with open(inputfile) as fp:
+        data = fp.read()
+
+    print("=============")
+    print(data)
+    print("=============")
     if interactive:
         input("Press 'enter' to quit. ")
     sys.exit(0)
@@ -34,24 +38,7 @@ def run(inp):
     o,e = P.communicate()
     return P.returncode
 
-def compare(expected,actual):
-    if expected["token"] != actual["token"]:
-        print("Expected node symbol to be",expected["token"],"but it was",actual["token"])
-        return False
-
-    if len(expected["children"]) != len(actual["children"]):
-        print("Child length mismatch for",expected["token"],": Expected",len(expected["children"]),"but got",len(actual["children"]))
-        return False
-
-    for i in range(len(expected["children"])):
-        ok = compare(expected["children"][i], actual["children"][i])
-        if not ok:
-            return False
-
-    return True
-
-
-opts,args = getopt.getopt(sys.argv[1:], "c:n:s:" )
+opts,args = getopt.getopt(sys.argv[1:], "c:ns:" )
 for o,a in opts:
     if o == "-c":
         COMPILER=a
@@ -80,30 +67,24 @@ numPassed=0
 numFailed=0
 for i in range(len(inputs)):
     dirname,fname = inputs[i]
-    print("Test",i,"(",fname,")...")
+    print("Test",i+1,"of",len(inputs),"(",fname,")...")
     if i >= numToSkip:
         inputfile = os.path.join(dirname,fname)
         rv = run(inputfile)
-        expectedfile = os.path.join("tests","outputs",fname.replace(".txt",".json"))
-        if not os.path.exists(expectedfile):
-            if rv == 0:
-                error("Expected failure, but compiler succeeded")
-            else:
-                numPassed += 1
-                continue
-        else:
-            if rv != 0:
-                error("Expected success, but compiler failed")
-            else:
-                with open(expectedfile) as fp:
-                    expectedJ = json.load(fp)
-                with open("tree.json") as fp:
-                    actualJ = json.load(fp)
-                if not compare(expectedJ,actualJ):
-                    error("Mismatch")
-                else:
-                    numPassed+=1
-                    pass
+        alegal = (rv==0)
+        with open(os.path.join("tests","outputs",fname)) as fp:
+            J = json.load(fp)
+        elegal = J["legal"]
+        if alegal == True and elegal == True:
+            numPassed+=1
+        elif alegal == True and elegal == False:
+            error("Expected failure, but compiler succeeded")
+            numFailed+=1
+        elif alegal == False and elegal == True:
+            error("Expected success, but compiler failed")
+            numFailed+=1
+        elif alegal == False and elegal == False:
+            numPassed+=1
     else:
         print("Skipping")
 

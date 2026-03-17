@@ -1,0 +1,3 @@
+func main() {
+    false - "ycfOWjYb" - 1.9
+}

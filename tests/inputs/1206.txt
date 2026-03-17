@@ -1,0 +1,5 @@
+func main() : int{
+    if "qmZfgRJx" | "dGHQffOo"{
+        return 0
+    }
+}

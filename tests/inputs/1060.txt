@@ -1,0 +1,3 @@
+func main() {
+    false and 3.59 and true
+}
