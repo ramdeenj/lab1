@@ -1,3 +1,0 @@
-func main() {
-    58 - 6.63 - "QtLAvVyS"
-}

@@ -1,3 +1,0 @@
-func main() {
-    1.4 ^ "FuYhrnor" ^ 2.32
-}

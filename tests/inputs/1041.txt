@@ -1,5 +1,0 @@
-func main() : int{
-    if "CketXHle" and 9.84{
-        return 0
-    }
-}

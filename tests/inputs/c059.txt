@@ -1,0 +1,5 @@
+func main(){
+    var x: float
+    var y: string
+    y = "foo" + x as string
+}

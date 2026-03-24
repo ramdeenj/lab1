@@ -1,5 +1,0 @@
-func main() : int{
-    if 33 << 22{
-        return 0
-    }
-}

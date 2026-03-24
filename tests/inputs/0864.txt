@@ -1,3 +1,0 @@
-func main() {
-    9.03 >>> "jbZPKtvp" >>> "YYOQFboP"
-}

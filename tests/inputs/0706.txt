@@ -1,3 +1,0 @@
-func main() {
-    "MNntSrWr" > 1.35
-}

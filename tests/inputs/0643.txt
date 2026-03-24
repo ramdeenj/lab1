@@ -1,5 +1,0 @@
-func main() : int{
-    if "dJUtLxFf" <= 3.4{
-        return 0
-    }
-}

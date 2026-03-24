@@ -1,3 +1,0 @@
-func main() {
-    "kZtoaSHZ" ** 0.21 ** 41
-}

@@ -1,3 +1,0 @@
-func main() {
-    "dxItZLyX" or "odtoAoEY" or false
-}

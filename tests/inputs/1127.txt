@@ -1,3 +1,0 @@
-func main() {
-    "vDgrXDHY" or false or 59
-}

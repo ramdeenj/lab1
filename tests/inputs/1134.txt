@@ -1,3 +1,0 @@
-func main() {
-    false or 11 or "FZLSEGKR"
-}

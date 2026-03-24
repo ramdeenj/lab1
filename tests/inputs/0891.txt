@@ -1,5 +1,0 @@
-func main() : int{
-    if "MMhqPkoL" >>> false{
-        return 0
-    }
-}

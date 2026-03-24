@@ -1,3 +1,0 @@
-func main() {
-    "LyQjEkOQ" >= 4.17
-}

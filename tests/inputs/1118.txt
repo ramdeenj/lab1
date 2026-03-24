@@ -1,3 +1,0 @@
-func main() {
-    "YXIduMoW" or 9.98 or 2.76
-}

@@ -1,5 +1,0 @@
-func main() : int{
-    if "COhasXdv" < true{
-        return 0
-    }
-}

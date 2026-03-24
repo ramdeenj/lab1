@@ -1,3 +1,0 @@
-func main() {
-    "RaOvqMwN" ^ 8 ^ true
-}

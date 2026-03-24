@@ -1,5 +1,0 @@
-func main() : int{
-    if 73 >>> 73{
-        return 0
-    }
-}

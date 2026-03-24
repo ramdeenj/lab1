@@ -1,3 +1,0 @@
-func main() {
-    4 or 85 or 49
-}

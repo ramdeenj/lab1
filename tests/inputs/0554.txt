@@ -1,3 +1,0 @@
-func main() {
-    47 << "ropFllQE" << 2
-}

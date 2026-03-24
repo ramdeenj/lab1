@@ -1,3 +1,0 @@
-func main() {
-    "OUWRgrbR" or true or true
-}

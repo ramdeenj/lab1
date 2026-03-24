@@ -1,3 +1,0 @@
-func main() {
-    52 * 5.0 * true
-}

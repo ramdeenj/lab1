@@ -1,3 +1,0 @@
-func main() {
-    31 * 11 * "RcPwdknq"
-}

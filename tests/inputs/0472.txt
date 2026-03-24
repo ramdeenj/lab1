@@ -1,3 +1,0 @@
-func main() {
-    "nLrtzTnl" / 10 / 86
-}

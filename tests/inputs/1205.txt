@@ -1,3 +1,0 @@
-func main() {
-    "bufRwtxl" | "lRwyzpZW" | false
-}

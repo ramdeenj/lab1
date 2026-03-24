@@ -191,12 +191,25 @@ public abstract class ExprNode : TreeNode
 
     static ExprNode parsePower(Tokenizer T)
     {
-        ExprNode left = parsePostfix(T);
+        ExprNode left = parseCast(T);
         if (T.peek() == "**")
         {
             Token op = T.next();
             ExprNode right = parseUnary(T);
             return new BinOpNode(op, left, right);
+        }
+        return left;
+    }
+
+    static ExprNode parseCast(Tokenizer T)
+    {
+        ExprNode left = parsePostfix(T);
+        while (T.peek() == "as")
+        {
+            Token asTok = T.next();
+            Token typeTok = T.next();
+            VarType targetType = VarType.fromToken(typeTok);
+            left = new CastNode(asTok, left, targetType);
         }
         return left;
     }

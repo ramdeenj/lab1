@@ -1,5 +1,0 @@
-func main() : int{
-    while 79 > 76{
-        return 0
-    }
-}

@@ -1,3 +1,0 @@
-func main() {
-    "uPtgRaik" and 3.75 and true
-}

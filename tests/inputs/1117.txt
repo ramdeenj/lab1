@@ -1,3 +1,0 @@
-func main() {
-    "elfDbJNn" or 4.65 or 22
-}

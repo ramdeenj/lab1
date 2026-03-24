@@ -1,3 +1,0 @@
-func main() {
-    "LJDpWCJC" ^ false ^ 3.39
-}

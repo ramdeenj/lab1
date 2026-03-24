@@ -20,7 +20,6 @@ public class BinOpNode : ExprNode
     {
         string op = token.lexeme;
 
-        // Assignment: skip type checking per spec
         if (op == "=")
         {
             type = right.type;
@@ -30,7 +29,6 @@ public class BinOpNode : ExprNode
         VarType L = left.type;
         VarType R = right.type;
 
-        // If either side is unknown (e.g. variable), skip
         if (L == null || R == null)
             return;
 
@@ -86,8 +84,19 @@ public class BinOpNode : ExprNode
                 break;
 
             default:
-                // Unknown op (comma for args, dot for member): leave type null
                 break;
+        }
+    }
+
+    public override void typeCheck()
+    {
+        if (token.lexeme == "=")
+        {
+            VarType L = left.type;
+            VarType R = right.type;
+            if (L == null || R == null) return;
+            if (L.GetType() != R.GetType())
+                Utils.error($"Type error: cannot assign {R.GetType().Name} to {L.GetType().Name}");
         }
     }
 }

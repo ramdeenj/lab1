@@ -1,3 +1,0 @@
-func main() {
-    "YnaPKUku" + "UMwKfgdf" + 9.0
-}

@@ -1,3 +1,0 @@
-func main() {
-    "hpcRLlbo" * 62 * 11
-}

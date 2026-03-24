@@ -1,0 +1,6 @@
+// this is invalid because the lhs is of type bool but the rhs is of type bool
+func main(){
+    var x: bool
+    var y: bool
+    y = x as float
+}

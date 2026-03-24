@@ -1,3 +1,0 @@
-func main() {
-    "anoBfoiS" + 6.57 + "TePzzrZT"
-}

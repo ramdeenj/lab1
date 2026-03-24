@@ -1,3 +1,0 @@
-func main() {
-    5.66 & "JRSmNtVN" & 7.03
-}

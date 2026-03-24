@@ -1,3 +1,0 @@
-func main() {
-    2.85 ** "kOzbjxnn" ** 6.91
-}

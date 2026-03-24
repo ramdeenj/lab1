@@ -1,5 +1,0 @@
-func main() : int{
-    if "zjnsrtDK" >> 3.98{
-        return 0
-    }
-}

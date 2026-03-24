@@ -1,3 +1,0 @@
-func main() {
-    "IYitOgjq" ** 45 ** true
-}

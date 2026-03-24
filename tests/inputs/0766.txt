@@ -1,5 +1,0 @@
-func main() : int{
-    if 45 >> "COwfOEQX"{
-        return 0
-    }
-}

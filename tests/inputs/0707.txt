@@ -1,5 +1,0 @@
-func main() : int{
-    while "pLgisoUt" > 1.18{
-        return 0
-    }
-}

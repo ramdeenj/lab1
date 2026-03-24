@@ -1,3 +1,0 @@
-func main() {
-    true or "yTKyQOeX" or 9.94
-}

@@ -1,5 +1,0 @@
-func main() : int{
-    if "IoTniFgp" + 21{
-        return 0
-    }
-}

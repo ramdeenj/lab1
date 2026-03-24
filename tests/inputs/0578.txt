@@ -1,5 +1,0 @@
-func main() : int{
-    while 3.3 << "IKubyofp"{
-        return 0
-    }
-}

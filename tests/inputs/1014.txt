@@ -1,3 +1,0 @@
-func main() {
-    7.0 and 82 and "txdeOOJn"
-}

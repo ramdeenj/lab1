@@ -1,3 +1,0 @@
-func main() {
-    "kWiRmiKU" / "tSSkRgrG" / 1.38
-}

@@ -1,3 +1,0 @@
-func main() {
-    61 / "ULZUSvso" / 62
-}

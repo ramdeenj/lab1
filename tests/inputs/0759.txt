@@ -1,3 +1,0 @@
-func main() {
-    17 >> 9.12 >> "iMQuoEuE"
-}

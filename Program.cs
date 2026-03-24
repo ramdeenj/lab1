@@ -18,6 +18,15 @@ public class Program
             walkPreorder(c, callback);
     }
 
+    static void setParents(TreeNode n)
+    {
+        foreach (TreeNode c in n.getChildNodes())
+        {
+            c.parent = n;
+            setParents(c);
+        }
+    }
+
     public static void Main(string[] args)
     {
         if (args.Length == 0)
@@ -44,17 +53,46 @@ public class Program
             return;
         }
 
-        // Postorder walk: set types bottom-up
+        setParents(p);
+
+        try
+        {
+            walkPreorder(p, (TreeNode n) =>
+            {
+                if (n is VarNode vn && vn.info == null)
+                {
+                    var info = SymbolTable.lookupInGlobal(vn.token.lexeme);
+                    if (info == null)
+                        Utils.error($"Variable {vn.token.lexeme} on line {vn.token.line} is not declared");
+                    vn.info = info;
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e.Message);
+            Environment.Exit(1);
+            return;
+        }
+
         walkPostorder(p, (TreeNode n) =>
         {
             (n as ExprNode)?.setType();
         });
 
-        // Preorder walk: type check statements
-        walkPreorder(p, (TreeNode n) =>
+        try
         {
-            n.typeCheck();
-        });
+            walkPreorder(p, (TreeNode n) =>
+            {
+                n.typeCheck();
+            });
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e.Message);
+            Environment.Exit(1);
+            return;
+        }
 
         Environment.Exit(0);
     }

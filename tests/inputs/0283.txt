@@ -1,3 +1,0 @@
-func main() {
-    23 + "zIEtxdCS" + 2.06
-}

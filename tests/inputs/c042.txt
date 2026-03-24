@@ -1,0 +1,6 @@
+// this is valid
+func main(){
+    var x: string
+    var y: string
+    y = x as string + "foo"
+}

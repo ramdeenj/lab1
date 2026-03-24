@@ -1,3 +1,0 @@
-func main() {
-    "FhtYuygn" ^ "KYjYCxKV" ^ "kqJKJLxt"
-}

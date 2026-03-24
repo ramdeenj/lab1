@@ -1,5 +1,0 @@
-func main() : int{
-    if "OvFbGwot" * "GcKsTBCU"{
-        return 0
-    }
-}

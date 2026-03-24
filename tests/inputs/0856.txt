@@ -1,5 +1,0 @@
-func main() : int{
-    while 5.36 >>> 81{
-        return 0
-    }
-}

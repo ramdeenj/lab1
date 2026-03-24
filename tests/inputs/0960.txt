@@ -1,3 +1,0 @@
-func main() {
-    "TxSdKbSn" ^ 9.41 ^ true
-}

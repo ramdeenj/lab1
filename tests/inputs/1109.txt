@@ -1,3 +1,0 @@
-func main() {
-    5.42 or true or "nXwigOdx"
-}

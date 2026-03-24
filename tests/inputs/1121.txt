@@ -1,5 +1,0 @@
-func main() : int{
-    if "FahfNled" or 2.85{
-        return 0
-    }
-}

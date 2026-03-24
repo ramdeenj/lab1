@@ -1,3 +1,0 @@
-func main() {
-    24 ** 15 ** "dFqNpomB"
-}

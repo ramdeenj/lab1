@@ -1,3 +1,0 @@
-func main() {
-    4.02 ^ 7.62 ^ "KBWrWWoT"
-}

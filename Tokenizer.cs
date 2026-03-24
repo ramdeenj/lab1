@@ -46,7 +46,7 @@ public class Tokenizer
         index += bestLen;
         line += best.lexeme.Split('\n').Length - 1;
 
-        if (best.sym == "WHITESPACE")
+        if (best.sym == "WHITESPACE" || best.sym == "COMMENT")
             return next();
 
         return best;

@@ -1,5 +1,0 @@
-func main() : int{
-    if 4.6 / "lbYAtNNR"{
-        return 0
-    }
-}

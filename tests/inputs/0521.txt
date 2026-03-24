@@ -1,5 +1,0 @@
-func main() : int{
-    if 7.5 < 15{
-        return 0
-    }
-}

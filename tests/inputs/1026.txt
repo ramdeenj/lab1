@@ -1,5 +1,0 @@
-func main() : int{
-    if 3.33 and "jGcLTZEm"{
-        return 0
-    }
-}

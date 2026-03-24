@@ -1,3 +1,0 @@
-func main() {
-    4 / false / "szimoFGx"
-}

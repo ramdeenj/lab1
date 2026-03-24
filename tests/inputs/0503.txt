@@ -1,3 +1,0 @@
-func main() {
-    false / "UyIPRpFP" / 5.66
-}

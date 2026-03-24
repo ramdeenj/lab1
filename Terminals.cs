@@ -5,27 +5,28 @@ public static class Terminals
 {
     public static string terminalspec = @"
 WHITESPACE :: [ \t\r\n]+
+COMMENT :: //[^\n]*
 FUNC :: func
 RETURN :: return
 IF :: if
 WHILE :: while
+VAR :: var
 TRUE :: true
 FALSE :: false
+AS :: as
 FLOAT :: [0-9]+\.[0-9]+
 NUM :: [0-9]+
 STRING :: ""[^""]*""
 ID :: [a-zA-Z_][a-zA-Z0-9_]*
 POWER :: \*\*
-SHIFTLEFT :: << 
-SHIFTRIGHT3 :: >>>
-SHIFTRIGHT3 :: >>>
+SHIFTLEFT :: 
 SHIFTRIGHT3 :: >>>
 SHIFTRIGHT :: >>
 EQ :: ==
 NEQ :: !=
 LE :: <=
 GE :: >=
-LT :: < 
+LT :: 
 GT :: >
 ANDKW :: and
 ORKW :: or
@@ -79,7 +80,3 @@ COLON :: :
         }
     }
 }
-
-
-
-

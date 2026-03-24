@@ -1,0 +1,5 @@
+func main(){
+    var x: bool
+    var y: int
+    y = 1 - x as int
+}

@@ -1,3 +1,0 @@
-func main() {
-    2 | 0.85 | "icrqFgZM"
-}

@@ -1,3 +1,0 @@
-func main() {
-    "MmgvIERx" * 8.08 * false
-}

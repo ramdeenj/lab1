@@ -1,3 +1,0 @@
-func main() {
-    "XOmtEANp" >>> false >>> 9.5
-}

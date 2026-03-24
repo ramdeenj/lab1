@@ -1,3 +1,0 @@
-func main() {
-    "dEsDKcae" + 4.75 + true
-}

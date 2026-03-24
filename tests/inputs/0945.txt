@@ -1,3 +1,0 @@
-func main() {
-    8.19 ^ "MITsthIb" ^ true
-}

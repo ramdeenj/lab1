@@ -1,3 +1,0 @@
-func main() {
-    8.37 and "tyGUjpEy" and 38
-}

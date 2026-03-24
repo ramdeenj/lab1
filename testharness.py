@@ -13,7 +13,7 @@ numToSkip=0
 interactive=True
 
 
-import sys, os.path, getopt, subprocess, json
+import sys, os.path, getopt, subprocess, json, re
 
 
 def error(msg):
@@ -34,9 +34,23 @@ def done():
     sys.exit(0)
 
 def run(inp):
-    P = subprocess.Popen([COMPILER,inp])
+    P = subprocess.Popen([COMPILER,inp],stdout=subprocess.PIPE)
     o,e = P.communicate()
-    return P.returncode
+    return P.returncode,o.decode()
+
+def makeSet(txt):
+    lines = txt.split("\n")
+    pattern = re.compile(r"(\w+) on line (\d+) is a (\w+) declared on line (\d+)")
+    s=set()
+    for line in lines:
+        M = pattern.search(line)
+        if M:
+            s.add(M.group(0))
+            # ~ name=M.group(1)
+            # ~ useline = M.group(2)
+            # ~ storage=M.group(3)
+            # ~ declline = M.group(4)
+    return s
 
 opts,args = getopt.getopt(sys.argv[1:], "c:ns:" )
 for o,a in opts:
@@ -63,18 +77,34 @@ for dirname,dirs,files in os.walk(inputfolder):
 
 inputs.sort()
 
+if len(inputs) == 0:
+    print("Did not find any inputs?")
+    sys.exit(1)
+
 numPassed=0
 numFailed=0
 for i in range(len(inputs)):
+    if numFailed > 0:
+        print()
+        print("At least one test failed. Stopping.")
+        sys.exit(1)
+
     dirname,fname = inputs[i]
     print("Test",i+1,"of",len(inputs),"(",fname,")...")
     if i >= numToSkip:
         inputfile = os.path.join(dirname,fname)
-        rv = run(inputfile)
+        rv,actual = run(inputfile)
         alegal = (rv==0)
         with open(os.path.join("tests","outputs",fname)) as fp:
-            J = json.load(fp)
-        elegal = J["legal"]
+            expected = fp.read()
+
+        if expected.strip().lower() == "invalid":
+            elegal=False
+        elif expected.strip().lower() == "valid":
+            elegal=True
+        else:
+            assert 0
+
         if alegal == True and elegal == True:
             numPassed+=1
         elif alegal == True and elegal == False:
@@ -85,9 +115,13 @@ for i in range(len(inputs)):
             numFailed+=1
         elif alegal == False and elegal == False:
             numPassed+=1
+        else:
+            assert False
+            
     else:
         print("Skipping")
 
+assert numPassed+numFailed == len(inputs)
 print(numPassed,"tests passed")
 print(numFailed,"tests failed")
 

@@ -1,5 +1,0 @@
-func main() : int{
-    while "AdffizAm" ^ "fPNlqeda"{
-        return 0
-    }
-}

@@ -1,3 +1,0 @@
-func main() {
-    "fFrnVwoD" >>> 0.61 >>> false
-}

@@ -1,3 +1,0 @@
-func main() {
-    4.9 >> "NlKpaBPC" >> 16
-}

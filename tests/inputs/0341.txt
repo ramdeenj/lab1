@@ -1,5 +1,0 @@
-func main() : int{
-    if true + 9.8{
-        return 0
-    }
-}

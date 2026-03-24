@@ -1,3 +1,0 @@
-func main() {
-    "VmnetBbp" << 1.68 << 6.21
-}

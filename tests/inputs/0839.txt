@@ -1,3 +1,0 @@
-func main() {
-    62 >>> 7.93 >>> "vcFYnSdo"
-}

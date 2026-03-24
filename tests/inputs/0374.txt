@@ -1,3 +1,0 @@
-func main() {
-    0.93 - 65 - "czDdIgad"
-}

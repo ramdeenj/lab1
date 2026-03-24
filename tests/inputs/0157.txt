@@ -1,3 +1,0 @@
-func main() {
-    "sfHBomzP" * 7.26 * 20
-}

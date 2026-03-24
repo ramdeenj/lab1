@@ -1,5 +1,0 @@
-func main() : int{
-    if false / 38{
-        return 0
-    }
-}

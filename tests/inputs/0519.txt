@@ -1,5 +1,0 @@
-func main() : int{
-    if 21 < false{
-        return 0
-    }
-}

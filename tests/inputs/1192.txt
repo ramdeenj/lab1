@@ -1,3 +1,0 @@
-func main() {
-    "vHOIsJsO" | 39 | 16
-}

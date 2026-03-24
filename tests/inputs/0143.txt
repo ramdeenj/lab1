@@ -1,3 +1,0 @@
-func main() {
-    4.81 * "SCOStSsd" * 0.72
-}

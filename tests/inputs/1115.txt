@@ -1,3 +1,0 @@
-func main() {
-    "lUaMvrUO" or 99 or true
-}

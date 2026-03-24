@@ -1,3 +1,0 @@
-func main() {
-    "HgrDLOzh" < 0.47
-}

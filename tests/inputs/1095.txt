@@ -1,3 +1,0 @@
-func main() {
-    8.23 or 25 or false
-}

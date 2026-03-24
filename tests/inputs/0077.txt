@@ -1,3 +1,0 @@
-func main() {
-    "bmgHYkMQ" & 0.45 & 90
-}

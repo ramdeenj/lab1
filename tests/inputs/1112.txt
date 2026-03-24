@@ -1,3 +1,0 @@
-func main() {
-    "yJrefLKq" or 5 or 6
-}

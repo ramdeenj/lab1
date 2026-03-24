@@ -1,5 +1,0 @@
-func main() : int{
-    if 12 * "MSOXLTAt"{
-        return 0
-    }
-}

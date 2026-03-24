@@ -1,5 +1,0 @@
-func main() : int{
-    if 0.44 >= "SpMUgFGK"{
-        return 0
-    }
-}

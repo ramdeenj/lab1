@@ -1,3 +1,0 @@
-func main() {
-    3.25 << 8.25 << "vsWlBtsW"
-}

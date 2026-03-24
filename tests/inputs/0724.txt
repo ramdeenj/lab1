@@ -1,3 +1,0 @@
-func main() {
-    62 >= "ykjWEytU"
-}

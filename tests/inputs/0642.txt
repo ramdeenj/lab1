@@ -1,3 +1,0 @@
-func main() {
-    "aDJIMVak" <= 9.14
-}

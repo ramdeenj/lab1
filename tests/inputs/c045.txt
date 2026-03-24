@@ -1,0 +1,6 @@
+// this is invalid because the lhs is of type string but the rhs is of type float
+func main(){
+    var x: string
+    var y: float
+    y = x as int
+}

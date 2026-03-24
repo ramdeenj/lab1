@@ -1,3 +1,0 @@
-func main() {
-    "cXFiuMDR" - 3.86 - 86
-}

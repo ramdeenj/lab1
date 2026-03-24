@@ -1,3 +1,0 @@
-func main() {
-    true << "dDXtMRXd" << 5.17
-}

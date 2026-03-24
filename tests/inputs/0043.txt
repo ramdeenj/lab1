@@ -1,3 +1,0 @@
-func main() {
-    57 & "IbLRdPEc" & 8.27
-}

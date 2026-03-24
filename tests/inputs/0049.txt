@@ -1,3 +1,0 @@
-func main() {
-    65 & true & "LEmErPZH"
-}

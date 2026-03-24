@@ -1,5 +1,0 @@
-func main() : int{
-    if 6.76 * 0.83{
-        return 0
-    }
-}

@@ -1,5 +1,0 @@
-func main() : int{
-    while 17 - 64{
-        return 0
-    }
-}

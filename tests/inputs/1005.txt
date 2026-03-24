@@ -1,3 +1,0 @@
-func main() {
-    40 and "RJtzSkPK" and true
-}

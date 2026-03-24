@@ -1,5 +1,0 @@
-func main() : int{
-    if true << "pOrNRpag"{
-        return 0
-    }
-}

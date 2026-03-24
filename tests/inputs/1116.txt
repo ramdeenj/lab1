@@ -1,5 +1,0 @@
-func main() : int{
-    if "UOGPvaMY" or 28{
-        return 0
-    }
-}

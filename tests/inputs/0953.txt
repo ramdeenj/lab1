@@ -1,3 +1,0 @@
-func main() {
-    "OrBWFsxe" ^ 17 ^ 5.14
-}

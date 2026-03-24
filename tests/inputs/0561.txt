@@ -1,3 +1,0 @@
-func main() {
-    91 << false << "eiyfWkgU"
-}

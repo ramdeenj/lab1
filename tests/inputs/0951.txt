@@ -1,5 +1,0 @@
-func main() : int{
-    if 1.34 ^ true{
-        return 0
-    }
-}

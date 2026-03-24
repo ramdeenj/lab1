@@ -1,5 +1,0 @@
-func main() : int{
-    if 76 / 78{
-        return 0
-    }
-}

@@ -1,0 +1,6 @@
+// this is invalid because we can only cast bool to bool
+func main(){
+    var x: bool
+    var y: float
+    y = x as float
+}

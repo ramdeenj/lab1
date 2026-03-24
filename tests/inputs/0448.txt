@@ -1,3 +1,0 @@
-func main() {
-    64 / false / 5.56
-}

@@ -1,5 +1,0 @@
-func main() : int{
-    while "xuFudoqs" / "WEyiZNbN"{
-        return 0
-    }
-}

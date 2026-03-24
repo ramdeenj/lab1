@@ -1,3 +1,0 @@
-func main() {
-    81 and "NUMMSRiU" and 7.91
-}

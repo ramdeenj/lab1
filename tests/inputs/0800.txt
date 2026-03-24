@@ -1,3 +1,0 @@
-func main() {
-    "OcysKGNg" >> 4.1 >> false
-}

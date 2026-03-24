@@ -1,3 +1,0 @@
-func main() {
-    "PobUAKyR" >>> 5.98 >>> 1.22
-}

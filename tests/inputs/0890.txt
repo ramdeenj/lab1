@@ -1,3 +1,0 @@
-func main() {
-    "uETENhGG" >>> true >>> false
-}

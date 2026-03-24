@@ -1,3 +1,0 @@
-func main() {
-    "LxlsiIZa" ^ "UcBLdltM" ^ 58
-}

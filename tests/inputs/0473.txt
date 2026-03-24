@@ -1,3 +1,0 @@
-func main() {
-    "IUHPTHLX" / 88 / 1.44
-}

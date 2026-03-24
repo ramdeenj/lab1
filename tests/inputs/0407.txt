@@ -1,3 +1,0 @@
-func main() {
-    "iSBgsrbz" - true - 13
-}

@@ -1,3 +1,0 @@
-func main() {
-    "UKoFtqou" << 42 << 4.57
-}

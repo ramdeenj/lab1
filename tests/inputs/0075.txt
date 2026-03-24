@@ -1,3 +1,0 @@
-func main() {
-    "RWpgZriV" & 3 & true
-}

@@ -1,5 +1,0 @@
-func main() : int{
-    while "OrUxxDOC" != 40{
-        return 0
-    }
-}

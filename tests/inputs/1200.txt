@@ -1,3 +1,0 @@
-func main() {
-    "GLWYbNgO" | 4.17 | true
-}

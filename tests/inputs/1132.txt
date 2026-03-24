@@ -1,3 +1,0 @@
-func main() {
-    false or 86 or 88
-}

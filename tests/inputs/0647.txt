@@ -1,5 +1,0 @@
-func main() : int{
-    while "glTKECTS" <= false{
-        return 0
-    }
-}

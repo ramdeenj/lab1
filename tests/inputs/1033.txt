@@ -1,3 +1,0 @@
-func main() {
-    "WFlAngZI" and 37 and 0.63
-}

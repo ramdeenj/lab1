@@ -1,5 +1,0 @@
-func main() : int{
-    if 61 * true{
-        return 0
-    }
-}

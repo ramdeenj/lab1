@@ -1,3 +1,0 @@
-func main() {
-    "GNisvxbp" >= 9
-}
