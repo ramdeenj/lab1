@@ -21,4 +21,10 @@ public class FuncdefNode : TreeNode
     {
         return new List<TreeNode> { body };
     }
+
+    public override void genCode()
+    {
+        ASM.Asm.emit(new ASM.Label(name));
+        base.genCode();
+    }
 }

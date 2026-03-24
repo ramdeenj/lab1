@@ -63,4 +63,14 @@ public class ReturnNode : StmtNode
         if (declared.GetType() != actual.GetType())
             Utils.error($"Function {enclosing.name} declared return type {declared.typeName()} but returns {actual.typeName()}");
     }
+
+    public override void genCode()
+    {
+        if (!isRealReturn)
+            return;
+
+        // genCode for the expression first (if any), then emit ret
+        base.genCode();
+        ASM.Asm.emit(new ASM.Ret());
+    }
 }

@@ -1,146 +1,199 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
+VERBOSE=False
 
-#set this equal to the path to your compiler executable
-#or else use the -c command line option
+TIMEOUT = 5
+
+#number of tests to skip so you can go right to the failing one
+SKIP=0
+
 COMPILER="bin/Debug/net8.0/lab1.exe"
 
-#can skip over some tests to get right to a specific one
-#Edit this or use the -s command line option
-numToSkip=0
 
-#to run noninteractively, set this to False or use the -n command line option
-interactive=True
+import shlex, subprocess, sys, time, json, getopt, tempfile, os, os.path, platform
 
+class BooBoo(Exception):
+    pass
 
-import sys, os.path, getopt, subprocess, json, re
+def run(args,quiet):
 
+    if VERBOSE:
+        print(" ".join( [shlex.quote(q) for q in args] ) )
 
-def error(msg):
-    print(msg)
-    with open(inputfile) as fp:
-        data = fp.read()
+    kw={}
 
-    print("=============")
-    print(data)
-    print("=============")
-    if interactive:
-        input("Press 'enter' to quit. ")
-    sys.exit(0)
+    if quiet:
+        kw["stdout"] = subprocess.PIPE
+        kw["stderr"] = subprocess.PIPE
 
-def done():
-    if interactive:
-        input("Press 'enter' to quit. ")
-    sys.exit(0)
+    if "win" in platform.system().lower():
+        kw["creationflags"] = subprocess.CREATE_NO_WINDOW
 
-def run(inp):
-    P = subprocess.Popen([COMPILER,inp],stdout=subprocess.PIPE)
-    o,e = P.communicate()
-    return P.returncode,o.decode()
+    p = subprocess.Popen(args,**kw)
 
- 
-def makeSet(txt):
-    lines = txt.strip().split("\n")
-    s=set()
-    for line in lines:
-        line=line.strip().lower()
-        if "on line " in line:
-            s.add(line)
-    return s
+    try:
+        o,e = p.communicate(timeout=TIMEOUT)
+        if not o:
+            o=b""
+        if not e:
+            e=b""
 
-def areSame(expected,actual):
-    eset = makeSet(expected)
-    aset = makeSet(actual)
-    if eset == aset:
-        return True
+        o=o.decode(errors="ignore")
+        e=e.decode(errors="ignore")
 
-    print("Mismatch!")
-    missing = eset-aset
-    if len(missing):
-        print()
-        print("These lines were expected but were not found:")
-        print("=============================================")
-        for m in missing:
-            print(m)
-    extra = aset-eset
-    if len(extra):
-        print()
-        print("These lines were not expected:")
-        print("==============================")
-        for e in extra:
-            print(e)
-    return False
+    except subprocess.TimeoutExpired:
+        p.kill()
+        raise
+
+    return p.returncode, o, e
 
 
-opts,args = getopt.getopt(sys.argv[1:], "c:ns:" )
-for o,a in opts:
-    if o == "-c":
-        COMPILER=a
-    elif o == "-n":
-        interactive=False
-    elif o == "-s":
-        numToSkip = int(a)
-    else:
-        assert False
+def replace(lst, values):
+    if type(lst) == str:
+        lst=[lst]
+    if type(values) == str:
+        values=[values]
 
-inputfolder=os.path.join(os.path.dirname(__file__),"tests","inputs")
-outputfolder=os.path.join(os.path.dirname(__file__),"tests","outputs")
+    repl=[]
+    for item in lst:
+        if item == "{}":
+            repl += values
+        else:
+            repl.append(item)
+    return repl
 
-if not os.path.exists(inputfolder):
-    error("Cannot find tests folder; it should be side-by-side with this harness.")
-
-inputs=[]
-for dirname,dirs,files in os.walk(inputfolder):
-    for f in files:
-        if f.endswith(".txt"):
-            inputs.append( ( dirname,f) )
-
-inputs.sort()
-
-if len(inputs) == 0:
-    print("Did not find any inputs?")
-    sys.exit(1)
-
-numPassed=0
-numFailed=0
-for i in range(len(inputs)):
-    if numFailed > 0:
-        print()
-        print("At least one test failed. Stopping.")
+    if p.returncode != 0:
+        print(f"Process {args[0]} exited with code {p.returncode}")
         sys.exit(1)
 
-    dirname,fname = inputs[i]
-    print("Test",i+1,"of",len(inputs),"(",fname,")...")
-    if i >= numToSkip:
-        inputfile = os.path.join(dirname,fname)
-        rv,actual = run(inputfile)
-        alegal = (rv==0)
-        with open(os.path.join("tests","outputs",fname)) as fp:
-            expected = fp.read()
 
-        if expected.strip() == "INVALID":
-            elegal=False
+
+def error(*msg):
+    tmp = " ".join([str(q) for q in msg])
+    print("ERROR!")
+    print(tmp)
+    raise BooBoo()
+
+def main():
+    stopOnFirstFail=True
+    global VERBOSE
+    global SKIP
+    global COMPILER
+
+    numGood=0
+    numBad=0
+
+    def good():
+        nonlocal numGood
+        numGood+=1
+        print("OK")
+    def bad(*msg):
+        nonlocal numBad, stopOnFirstFail
+        numBad+=1
+        tmp = " ".join([str(q) for q in msg])
+        print("ERROR")
+        print(tmp)
+        if stopOnFirstFail:
+            print("Num Passing:",numGood)
+            print("Num Failing:",numBad)
+            raise BooBoo()
+
+
+
+
+    opts,args = getopt.gnu_getopt(sys.argv[1:],"kvs:",
+        [ "--stop", "--verbose", "--skip" ]
+    )
+
+
+    for o,a in opts:
+        if o in ["-k","--stop"]:
+            stopOnFirstFail=not stopOnFirstFail
+        elif o in ["-v","--verbose"]:
+            VERBOSE=True
+        elif o in ["-s","--skip"]:
+            SKIP=int(a)
         else:
-            elegal=True
+            assert 0,f"{o} is not a valid argument"
 
-        if alegal == True and elegal == True:
-            if areSame(expected,actual):
-                numPassed+=1
+    if args:
+        COMPILER=args[0]
+
+    if not os.path.exists("tests") or not os.path.exists("tests/inputs"):
+        error("Could not find tests folder")
+
+    numtests = 0
+    alltests=[]
+    for dirpath,dirs,files in os.walk(f"tests/inputs"):
+        for f in files:
+            if f.endswith(".txt"):
+                alltests.append( (dirpath,f) )
+
+    alltests.sort()
+
+    if len(alltests) == 0:
+        error("No tests found")
+
+    for counter,tmp in enumerate(alltests):
+        dirpath,f = tmp
+        print(f"Test {counter+1} of {len(alltests)} ({f})...",end="")
+        if counter < SKIP:
+            print("SKIPPED")
+            continue
+        else:
+            print()
+
+        tf = tempfile.NamedTemporaryFile(mode="w",delete=False)
+        try:
+            with open(f"{dirpath}/{f}") as fp:
+                jdata=[]
+                while True:
+                    line = fp.readline().strip()
+                    jdata.append(line)
+                    tf.write("\n")
+                    if len(line) == 0:
+                        break
+                tf.write(fp.read())
+            tf.close()
+            try:
+                J = json.loads( "".join(jdata) )
+            except json.decoder.JSONDecodeError:
+                print("Invalid JSON:")
+                print("".join(jdata))
+                sys.exit(1)
+
+            shouldcompile = J.get("compiles",True)
+            r,o,e = run([COMPILER,tf.name,"out.asm"],quiet=False)
+            didcompile = (r==0)
+
+            if shouldcompile:
+                if didcompile:
+                    try:
+                        r,o,e = run([os.path.join(".","out.exe")],quiet=True)
+                        if "returns" in J and r != J["returns"]:
+                            bad(f"Executable returned {r} but should have returned {J['returns']}")
+                        else:
+                            good()
+                    except BooBoo:
+                        bad("Resulting assembly language file was invalid")
+                else:
+                    bad("File should compile without error but it did not")
             else:
-                numFailed+=1
-        elif alegal == True and elegal == False:
-            error("Expected failure, but compiler succeeded")
-            numFailed+=1
-        elif alegal == False and elegal == True:
-            error("Expected success, but compiler failed")
-            numFailed+=1
-        elif alegal == False and elegal == False:
-            numPassed+=1
-    else:
-        print("Skipping")
+                if didcompile:
+                    bad("File should not compile but it did")
+                else:
+                    good()
 
-assert numPassed+numFailed == len(inputs)
-print(numPassed,"tests passed")
-print(numFailed,"tests failed")
+        finally:
+            os.remove(tf.name)
 
-done()
+
+    print("Done. Out of",len(alltests),"tests:")
+    print("Num Passing:",numGood)
+    print("Num Failing:",numBad)
+
+
+try:
+    main()
+except BooBoo:
+    pass

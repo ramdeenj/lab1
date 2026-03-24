@@ -1,12 +1,7 @@
-
-class Ogre {
-    var health: int
-    func heal() {
-        this.health = this.health + 1
-    }
+{
+    "compiles": false
 }
 
-func main(){
-    var o: Ogre
-    o.heal()
+func main(): bool {
+    return true
 }

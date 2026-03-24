@@ -29,14 +29,17 @@ public class Program
 
     public static void Main(string[] args)
     {
-        if (args.Length == 0)
+        if (args.Length < 2)
         {
-            Console.Error.WriteLine("Missing input file");
+            Console.Error.WriteLine("Usage: lab <inputfile> <outputfile>");
             Environment.Exit(1);
         }
 
+        string inputFile  = args[0];
+        string outputFile = args[1];
+
         var T = new Tokenizer();
-        using (var r = new StreamReader(args[0]))
+        using (var r = new StreamReader(inputFile))
         {
             T.setInput(r.ReadToEnd());
         }
@@ -115,18 +118,35 @@ public class Program
             return;
         }
 
-        // Output: print variable and member references
-        walkPreorder(p, (TreeNode n) =>
+        // Phase 6: Validate main
+        try
         {
-            if (n is VarNode vn && vn.info != null)
+            walkPreorder(p, (TreeNode n) =>
             {
-                Console.WriteLine($"Variable {vn.token.lexeme} on line {vn.token.line} is of type {vn.info.type.typeName()}");
-            }
-            else if (n is MemberNode mn && mn.declaringClass != null)
-            {
-                Console.WriteLine($"Variable {mn.token.lexeme} on line {mn.token.line} is a member of class {mn.declaringClass.name} and is of type {mn.type.typeName()}");
-            }
-        });
+                if (n is FuncdefNode fd && fd.name == "main" && fd.returnType != null)
+                    Utils.error("Function main must have no return type");
+            });
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e.Message);
+            Environment.Exit(1);
+            return;
+        }
+
+        // Phase 7: Code generation
+        ASM.Asm.clear();
+        p.genCode();
+
+        // Write the assembly file
+        string entryLabel = "main";
+        using (var w = new StreamWriter(outputFile))
+        {
+            ASM.Asm.write(w, entryLabel);
+        }
+
+        // Compile assembly to executable
+        Run.compile(outputFile);
 
         Environment.Exit(0);
     }

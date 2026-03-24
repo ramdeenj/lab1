@@ -1,9 +1,0 @@
-
-func main(){
-    var o: Ogre
-    o.helth = 42
-}
-
-class Ogre {
-    var health: int
-}

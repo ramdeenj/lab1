@@ -1,1 +1,0 @@
-Variable spawn on line 12 is of type function
