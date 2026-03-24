@@ -38,7 +38,7 @@ public class BinOpNode : ExprNode
                 if (L is IntType && R is IntType) { type = new IntType(); return; }
                 if (L is FloatType && R is FloatType) { type = new FloatType(); return; }
                 if (L is StringType && R is StringType) { type = new StringType(); return; }
-                Utils.error($"Type error: cannot apply '{op}' to {L.GetType().Name} and {R.GetType().Name}");
+                Utils.error($"Type error: cannot apply '{op}' to {L.typeName()} and {R.typeName()}");
                 break;
 
             case "-":
@@ -48,7 +48,7 @@ public class BinOpNode : ExprNode
             case "**":
                 if (L is IntType && R is IntType) { type = new IntType(); return; }
                 if (L is FloatType && R is FloatType) { type = new FloatType(); return; }
-                Utils.error($"Type error: cannot apply '{op}' to {L.GetType().Name} and {R.GetType().Name}");
+                Utils.error($"Type error: cannot apply '{op}' to {L.typeName()} and {R.typeName()}");
                 break;
 
             case "<<":
@@ -58,13 +58,14 @@ public class BinOpNode : ExprNode
             case "|":
             case "^":
                 if (L is IntType && R is IntType) { type = new IntType(); return; }
-                Utils.error($"Type error: cannot apply '{op}' to {L.GetType().Name} and {R.GetType().Name}");
+                Utils.error($"Type error: cannot apply '{op}' to {L.typeName()} and {R.typeName()}");
                 break;
 
             case "==":
             case "!=":
-                if (L.GetType() == R.GetType()) { type = new BoolType(); return; }
-                Utils.error($"Type error: cannot apply '{op}' to {L.GetType().Name} and {R.GetType().Name}");
+                if (L is ClassType lct && R is ClassType rct && lct.name == rct.name) { type = new BoolType(); return; }
+                if (!(L is ClassType) && !(R is ClassType) && L.GetType() == R.GetType()) { type = new BoolType(); return; }
+                Utils.error($"Type error: cannot apply '{op}' to {L.typeName()} and {R.typeName()}");
                 break;
 
             case ">":
@@ -74,13 +75,13 @@ public class BinOpNode : ExprNode
                 if (L is IntType && R is IntType) { type = new BoolType(); return; }
                 if (L is FloatType && R is FloatType) { type = new BoolType(); return; }
                 if (L is StringType && R is StringType) { type = new BoolType(); return; }
-                Utils.error($"Type error: cannot apply '{op}' to {L.GetType().Name} and {R.GetType().Name}");
+                Utils.error($"Type error: cannot apply '{op}' to {L.typeName()} and {R.typeName()}");
                 break;
 
             case "and":
             case "or":
                 if (L is BoolType && R is BoolType) { type = new BoolType(); return; }
-                Utils.error($"Type error: cannot apply '{op}' to {L.GetType().Name} and {R.GetType().Name}");
+                Utils.error($"Type error: cannot apply '{op}' to {L.typeName()} and {R.typeName()}");
                 break;
 
             default:
@@ -95,8 +96,16 @@ public class BinOpNode : ExprNode
             VarType L = left.type;
             VarType R = right.type;
             if (L == null || R == null) return;
+
+            if (L is ClassType lc && R is ClassType rc)
+            {
+                if (lc.name != rc.name)
+                    Utils.error($"Type error: cannot assign {R.typeName()} to {L.typeName()}");
+                return;
+            }
+
             if (L.GetType() != R.GetType())
-                Utils.error($"Type error: cannot assign {R.GetType().Name} to {L.GetType().Name}");
+                Utils.error($"Type error: cannot assign {R.typeName()} to {L.typeName()}");
         }
     }
 }

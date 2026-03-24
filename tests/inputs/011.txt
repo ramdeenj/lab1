@@ -1,0 +1,9 @@
+
+
+class Ogre {
+    var health: int
+}
+
+class Ogre {
+    var blah: int
+}

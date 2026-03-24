@@ -1,0 +1,13 @@
+
+
+class Ogre {
+    var health: int
+}
+
+func spawn(): Ogre {
+    return new Ogre()
+}
+
+func main(){
+    spawn()
+}

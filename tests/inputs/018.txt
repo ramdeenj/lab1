@@ -1,0 +1,23 @@
+
+class Point {
+    var x: int
+    var y: int
+    func distanceFromOrigin(): float {
+        return (this.x*this.x + this.y*this.y) as float ** 0.5
+    }
+}
+
+class Ogre {
+    var location: Point
+    func moveTo( p: Point ) {
+        this.location.x = p.x
+        this.location.y = p.y
+    }
+    func moveToXY( x: int, y: int ) {
+        this.location.x = x
+        this.location.y = y
+    }
+    func moveToOgre( o: Ogre ){
+        this.location = o.location
+    }
+}

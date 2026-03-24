@@ -5,6 +5,21 @@ public class ProgramNode : TreeNode
 {
     public List<TreeNode> topLevel;
 
+    private static Dictionary<string, ClassType> classRegistry = new Dictionary<string, ClassType>();
+
+    public static ClassType getClassType(Token t)
+    {
+        string name = t.lexeme;
+        if (!classRegistry.ContainsKey(name))
+            classRegistry[name] = new ClassType(name);
+        return classRegistry[name];
+    }
+
+    public static void resetClassRegistry()
+    {
+        classRegistry.Clear();
+    }
+
     public ProgramNode(List<TreeNode> topLevel)
     {
         this.topLevel = topLevel;
@@ -12,14 +27,17 @@ public class ProgramNode : TreeNode
 
     public static ProgramNode parse(Tokenizer T)
     {
+        resetClassRegistry();
         var topLevel = new List<TreeNode>();
 
         while (T.peek() != "")
         {
             if (T.peek() == "func")
-                topLevel.Add(parseFuncdef(T));
+                topLevel.Add(parseFuncdef(T, null));
             else if (T.peek() == "var")
                 topLevel.Add(VarDeclNode.parse(T, new GlobalLocation()));
+            else if (T.peek() == "class")
+                topLevel.Add(parseClassDecl(T));
             else
                 Utils.error($"Unexpected token at top level: {T.peek()}");
         }
@@ -27,7 +45,48 @@ public class ProgramNode : TreeNode
         return new ProgramNode(topLevel);
     }
 
-    static FuncdefNode parseFuncdef(Tokenizer T)
+    static ClassDeclNode parseClassDecl(Tokenizer T)
+    {
+        T.expect("CLASS");
+        Token nameToken = T.expect("ID");
+
+        ClassType ct = getClassType(nameToken);
+        if (ct.declarer != null)
+            Utils.error($"Class {nameToken.lexeme} already declared");
+
+        var node = new ClassDeclNode(nameToken, ct);
+
+        T.expect("LBRACE");
+
+        var memberNames = new HashSet<string>();
+
+        while (T.peek() != "}" && T.peek() != "")
+        {
+            if (T.peek() == "var")
+            {
+                var field = VarDeclNode.parseClassMember(T);
+                if (!memberNames.Add(field.idToken.lexeme))
+                    Utils.error($"Duplicate member '{field.idToken.lexeme}' in class {nameToken.lexeme}");
+                node.fields.Add(field);
+            }
+            else if (T.peek() == "func")
+            {
+                var method = parseFuncdef(T, ct);
+                if (!memberNames.Add(method.name))
+                    Utils.error($"Duplicate member '{method.name}' in class {nameToken.lexeme}");
+                node.methods.Add(method);
+            }
+            else
+            {
+                Utils.error($"Unexpected token in class body: {T.peek()}");
+            }
+        }
+
+        T.expect("RBRACE");
+        return node;
+    }
+
+    static FuncdefNode parseFuncdef(Tokenizer T, ClassType classContext)
     {
         T.expect("FUNC");
         Token nameToken = T.expect("ID");
@@ -37,6 +96,12 @@ public class ProgramNode : TreeNode
         var parameters = new List<(Token idToken, VarType vtype)>();
 
         SymbolTable.addScope();
+
+        if (classContext != null)
+        {
+            Token thisToken = new Token("THIS", nameToken.line, "this");
+            SymbolTable.declare(thisToken, classContext, new ParameterLocation());
+        }
 
         if (T.peek() != ")")
         {
@@ -57,21 +122,16 @@ public class ProgramNode : TreeNode
         {
             T.next();
             Token typeToken = T.next();
-            if (typeToken.lexeme == "int" || typeToken.lexeme == "float" ||
-                typeToken.lexeme == "string" || typeToken.lexeme == "bool")
-            {
-                returnType = VarType.fromToken(typeToken);
-            }
-            else
-            {
-                Utils.error($"Expected return type after ':', got '{typeToken.lexeme}' in function {funcName}");
-            }
+            returnType = VarType.fromToken(typeToken);
         }
 
-        var paramList = new List<(string, VarType)>();
-        foreach (var (idTok, vtype) in parameters)
-            paramList.Add((idTok.lexeme, vtype));
-        SymbolTable.declareInGlobal(nameToken, new FuncType(returnType, paramList));
+        if (classContext == null)
+        {
+            var paramList = new List<(string, VarType)>();
+            foreach (var (idTok, vtype) in parameters)
+                paramList.Add((idTok.lexeme, vtype));
+            SymbolTable.declareInGlobal(nameToken, new FuncType(returnType, paramList));
+        }
 
         T.expect("LBRACE");
         StmtsNode body = parseStmts(T);

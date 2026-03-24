@@ -38,19 +38,39 @@ def run(inp):
     o,e = P.communicate()
     return P.returncode,o.decode()
 
+ 
 def makeSet(txt):
-    lines = txt.split("\n")
-    pattern = re.compile(r"(\w+) on line (\d+) is a (\w+) declared on line (\d+)")
+    lines = txt.strip().split("\n")
     s=set()
     for line in lines:
-        M = pattern.search(line)
-        if M:
-            s.add(M.group(0))
-            # ~ name=M.group(1)
-            # ~ useline = M.group(2)
-            # ~ storage=M.group(3)
-            # ~ declline = M.group(4)
+        line=line.strip().lower()
+        if "on line " in line:
+            s.add(line)
     return s
+
+def areSame(expected,actual):
+    eset = makeSet(expected)
+    aset = makeSet(actual)
+    if eset == aset:
+        return True
+
+    print("Mismatch!")
+    missing = eset-aset
+    if len(missing):
+        print()
+        print("These lines were expected but were not found:")
+        print("=============================================")
+        for m in missing:
+            print(m)
+    extra = aset-eset
+    if len(extra):
+        print()
+        print("These lines were not expected:")
+        print("==============================")
+        for e in extra:
+            print(e)
+    return False
+
 
 opts,args = getopt.getopt(sys.argv[1:], "c:ns:" )
 for o,a in opts:
@@ -98,15 +118,16 @@ for i in range(len(inputs)):
         with open(os.path.join("tests","outputs",fname)) as fp:
             expected = fp.read()
 
-        if expected.strip().lower() == "invalid":
+        if expected.strip() == "INVALID":
             elegal=False
-        elif expected.strip().lower() == "valid":
-            elegal=True
         else:
-            assert 0
+            elegal=True
 
         if alegal == True and elegal == True:
-            numPassed+=1
+            if areSame(expected,actual):
+                numPassed+=1
+            else:
+                numFailed+=1
         elif alegal == True and elegal == False:
             error("Expected failure, but compiler succeeded")
             numFailed+=1
@@ -115,9 +136,6 @@ for i in range(len(inputs)):
             numFailed+=1
         elif alegal == False and elegal == False:
             numPassed+=1
-        else:
-            assert False
-            
     else:
         print("Skipping")
 

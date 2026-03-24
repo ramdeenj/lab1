@@ -39,7 +39,7 @@ public class ReturnNode : StmtNode
         if (expr == null)
         {
             if (declared != null)
-                Utils.error($"Function {enclosing.name} must return {declared.GetType().Name} but has bare return");
+                Utils.error($"Function {enclosing.name} must return {declared.typeName()} but has bare return");
             return;
         }
 
@@ -53,7 +53,14 @@ public class ReturnNode : StmtNode
             return;
         }
 
+        if (declared is ClassType dc && actual is ClassType ac)
+        {
+            if (dc.name != ac.name)
+                Utils.error($"Function {enclosing.name} declared return type {dc.name} but returns {ac.name}");
+            return;
+        }
+
         if (declared.GetType() != actual.GetType())
-            Utils.error($"Function {enclosing.name} declared return type {declared.GetType().Name} but returns {actual.GetType().Name}");
+            Utils.error($"Function {enclosing.name} declared return type {declared.typeName()} but returns {actual.typeName()}");
     }
 }

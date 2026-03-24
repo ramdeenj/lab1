@@ -1,0 +1,2 @@
+Variable foo on line 9 is a member of class Ogre and is of type function
+Variable this on line 9 is of type Ogre

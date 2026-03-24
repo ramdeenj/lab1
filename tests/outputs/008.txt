@@ -1,0 +1,1 @@
+Variable foo on line 9 is of type function

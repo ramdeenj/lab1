@@ -6,6 +6,9 @@ public static class Terminals
     public static string terminalspec = @"
 WHITESPACE :: [ \t\r\n]+
 COMMENT :: //[^\n]*
+CLASS :: class
+NEW :: new
+THIS :: this
 FUNC :: func
 RETURN :: return
 IF :: if

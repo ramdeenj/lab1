@@ -1,0 +1,9 @@
+
+func main(){
+    var o: Ogre
+    o.health = 42
+}
+
+class Ogre {
+    var health: int
+}

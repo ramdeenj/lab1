@@ -11,9 +11,20 @@ public class VarType
             case "string": return new StringType();
             case "bool": return new BoolType();
             default:
-                Utils.error($"Expected variable type, but got {t}");
-                throw new System.Exception();
+                return ProgramNode.getClassType(t);
         }
+    }
+
+    public string typeName()
+    {
+        if (this is IntType) return "int";
+        if (this is FloatType) return "float";
+        if (this is StringType) return "string";
+        if (this is BoolType) return "bool";
+        if (this is FuncType) return "function";
+        if (this is ClassType ct) return ct.name;
+        if (this is VoidType) return "void";
+        return "unknown";
     }
 }
 
@@ -32,5 +43,17 @@ public class FuncType : VarType
     {
         this.returnType = returnType;
         this.parameters = parameters;
+    }
+}
+
+public class ClassType : VarType
+{
+    public string name;
+    public ClassDeclNode declarer;
+
+    public ClassType(string name)
+    {
+        this.name = name;
+        this.declarer = null;
     }
 }

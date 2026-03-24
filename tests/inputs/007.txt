@@ -1,0 +1,17 @@
+
+
+class Ogre {
+    var health: int
+    func __init__(health: int){
+        this.health = health
+    }
+}
+
+func spawn(): Ogre {
+    return new Ogre(10)
+}
+
+func main(){
+    var o: Ogre
+    o = spawn()
+}

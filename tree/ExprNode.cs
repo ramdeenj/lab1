@@ -216,16 +216,17 @@ public abstract class ExprNode : TreeNode
 
     static ExprNode parsePostfix(Tokenizer T)
     {
-        ExprNode left = parsePrimary(T);
+        ExprNode left = parseNew(T);
         while (true)
         {
             if (T.peek() == ".")
             {
-                Token op = T.next();
-                Token next = T.next();
-                if (next.sym != "ID") throw new System.Exception("invalid member access");
-                ExprNode right = new VarNode(next);
-                left = new BinOpNode(op, left, right);
+                Token dotTok = T.next();
+                Token memberTok = T.next();
+                if (memberTok.sym != "ID")
+                    throw new System.Exception("Expected member name after '.'");
+                var memberNode = new MemberNode(memberTok);
+                left = new DotNode(dotTok, left, memberNode);
             }
             else if (T.peek() == "[")
             {
@@ -265,6 +266,40 @@ public abstract class ExprNode : TreeNode
         return left;
     }
 
+    static ExprNode parseNew(Tokenizer T)
+    {
+        if (T.peek() == "new")
+        {
+            Token newTok = T.next();
+            Token classNameTok = T.next();
+            if (classNameTok.sym != "ID")
+                throw new System.Exception("Expected class name after 'new'");
+            ClassType ct = ProgramNode.getClassType(classNameTok);
+            T.expect("LPAREN");
+            ExprNode args = null;
+            if (T.peek() == ")")
+            {
+                T.next();
+            }
+            else
+            {
+                ExprNode arg = parse(T);
+                while (T.peek() == ",")
+                {
+                    Token comma = T.next();
+                    if (T.peek() == ")" || T.peek() == ",")
+                        throw new System.Exception("invalid syntax");
+                    ExprNode rightArg = parse(T);
+                    arg = new BinOpNode(comma, arg, rightArg);
+                }
+                T.expect("RPAREN");
+                args = arg;
+            }
+            return new NewNode(newTok, ct, args);
+        }
+        return parsePrimary(T);
+    }
+
     static ExprNode parsePrimary(Tokenizer T)
     {
         Token tok = T.next();
@@ -272,6 +307,7 @@ public abstract class ExprNode : TreeNode
         if (tok.sym == "FLOAT") return new FloatNode(tok);
         if (tok.sym == "STRING") return new StringNode(tok);
         if (tok.sym == "TRUE" || tok.sym == "FALSE") return new BoolNode(tok);
+        if (tok.sym == "THIS") return new VarNode(tok);
         if (tok.sym == "ID") return new VarNode(tok);
         if (tok.sym == "LPAREN")
         {
@@ -279,6 +315,6 @@ public abstract class ExprNode : TreeNode
             T.expect("RPAREN");
             return e;
         }
-        throw new System.Exception("invalid expression");
+        throw new System.Exception($"invalid expression: got '{tok.lexeme}'");
     }
 }

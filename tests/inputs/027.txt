@@ -1,0 +1,11 @@
+
+
+func foo(){
+}
+
+class Ogre {
+    var health: int
+    func foo(){
+        this.helth=24
+    }
+}

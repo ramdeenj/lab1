@@ -1,0 +1,20 @@
+var x: int
+
+class Point{
+    var x: int
+    var y: int
+}
+
+class Vector{
+    var x: int
+    var y: int
+}
+
+func main(){
+    var p: Point
+    var v: Vector
+    var v2: Vector
+    p.x = 100
+    v.y = 100
+    v=p
+}

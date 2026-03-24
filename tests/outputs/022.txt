@@ -1,0 +1,3 @@
+Variable p on line 14 is of type Point
+Variable x on line 14 is a member of class Point and is of type int
+Variable x on line 15 is of type int

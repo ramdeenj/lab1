@@ -1,0 +1,11 @@
+
+
+class Ogre {
+    var health: int
+    var pal: Ogre
+}
+
+func main(){
+    var o: Ogre
+    o.pal.health = 42
+}

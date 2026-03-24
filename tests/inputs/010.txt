@@ -1,0 +1,7 @@
+
+
+class Ogre {
+    var health: int
+    func health(){
+    }
+}

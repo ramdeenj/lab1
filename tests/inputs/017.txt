@@ -1,0 +1,16 @@
+
+class Point {
+    var x: int
+    var y: int
+}
+
+class Ogre {
+    var health: int
+    var location: Point
+    var pal: Ogre
+}
+
+func main(){
+    var o: Ogre
+    o.pal.location.x = 42
+}

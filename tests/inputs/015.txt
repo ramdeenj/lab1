@@ -1,0 +1,12 @@
+
+class Point {
+    var x: int
+    var y: int
+    func distanceSquared(): int {
+        return (x*x + y*y)
+    }
+}
+
+func main(){
+    return
+}

@@ -1,0 +1,22 @@
+Variable this on line 6 is of type Point
+Variable x on line 6 is a member of class Point and is of type int
+Variable y on line 6 is a member of class Point and is of type int
+Variable location on line 13 is a member of class Ogre and is of type Point
+Variable p on line 13 is of type Point
+Variable this on line 13 is of type Ogre
+Variable x on line 13 is a member of class Point and is of type int
+Variable location on line 14 is a member of class Ogre and is of type Point
+Variable p on line 14 is of type Point
+Variable this on line 14 is of type Ogre
+Variable y on line 14 is a member of class Point and is of type int
+Variable location on line 17 is a member of class Ogre and is of type Point
+Variable this on line 17 is of type Ogre
+Variable x on line 17 is a member of class Point and is of type int
+Variable x on line 17 is of type int
+Variable location on line 18 is a member of class Ogre and is of type Point
+Variable this on line 18 is of type Ogre
+Variable y on line 18 is a member of class Point and is of type int
+Variable y on line 18 is of type int
+Variable location on line 21 is a member of class Ogre and is of type Point
+Variable o on line 21 is of type Ogre
+Variable this on line 21 is of type Ogre

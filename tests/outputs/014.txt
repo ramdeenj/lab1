@@ -1,0 +1,8 @@
+Variable health on line 4 is a member of class Ogre and is of type int
+Variable this on line 4 is of type Ogre
+Variable h on line 11 is of type int
+Variable h on line 12 is of type int
+Variable health on line 12 is a member of class Ogre and is of type int
+Variable o on line 12 is of type Ogre
+Variable heal on line 13 is a member of class Ogre and is of type function
+Variable o on line 13 is of type Ogre

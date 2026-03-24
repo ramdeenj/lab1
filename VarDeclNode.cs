@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 
-// AST node for:  var ID : TYPE
 public class VarDeclNode : StmtNode
 {
     public Token idToken;
     public VarType varType;
-    public VarInfo? info;
+    public VarInfo info;
 
     public VarDeclNode(Token idToken, VarType varType)
     {
@@ -32,10 +31,22 @@ public class VarDeclNode : StmtNode
         VarType vtype = VarType.fromToken(typeToken);
 
         var node = new VarDeclNode(id, vtype);
-
         SymbolTable.declare(id, vtype, location);
         node.info = SymbolTable.lookupIfExists(id.lexeme);
+        return node;
+    }
 
+    // Used inside class body: parse but do NOT add to symbol table
+    public static VarDeclNode parseClassMember(Tokenizer T)
+    {
+        T.expect("VAR");
+        Token id = T.expect("ID");
+        T.expect("COLON");
+        Token typeToken = T.next();
+        VarType vtype = VarType.fromToken(typeToken);
+
+        var node = new VarDeclNode(id, vtype);
+        node.info = new VarInfo(id, vtype, new GlobalLocation());
         return node;
     }
 }

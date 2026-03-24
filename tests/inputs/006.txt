@@ -1,0 +1,12 @@
+
+
+class Ogre {
+    var health: int
+    func __init__(h: int){
+        this.health = h
+    }
+}
+
+func main(){
+    new Ogre(10)
+}

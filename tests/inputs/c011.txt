@@ -1,5 +1,0 @@
-func main(){
-    var x: int
-    var y: string
-    y = "foo" + x as string
-}

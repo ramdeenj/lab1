@@ -1,0 +1,14 @@
+class Ogre {
+    var health: int
+    func heal(){
+        this.health = this.health + 10
+    }
+}
+
+func main(){
+    var o: Ogre
+    var h: int
+    h=42
+    o.health = h
+    o.heal()
+}

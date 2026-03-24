@@ -55,6 +55,7 @@ public class Program
 
         setParents(p);
 
+        // Phase 2: Resolve hoisted globals (VarNodes with null info)
         try
         {
             walkPreorder(p, (TreeNode n) =>
@@ -75,11 +76,31 @@ public class Program
             return;
         }
 
+        // Phase 3: Validate all ClassTypes have been defined
+        try
+        {
+            walkPreorder(p, (TreeNode n) =>
+            {
+                if (n is VarNode vn2 && vn2.info != null && vn2.info.type is ClassType ct && ct.declarer == null)
+                    Utils.error($"Class {ct.name} is not defined");
+                if (n is VarDeclNode vd && vd.varType is ClassType ct2 && ct2.declarer == null)
+                    Utils.error($"Class {ct2.name} is not defined");
+            });
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e.Message);
+            Environment.Exit(1);
+            return;
+        }
+
+        // Phase 4: Set types bottom-up
         walkPostorder(p, (TreeNode n) =>
         {
             (n as ExprNode)?.setType();
         });
 
+        // Phase 5: Type checks
         try
         {
             walkPreorder(p, (TreeNode n) =>
@@ -93,6 +114,19 @@ public class Program
             Environment.Exit(1);
             return;
         }
+
+        // Output: print variable and member references
+        walkPreorder(p, (TreeNode n) =>
+        {
+            if (n is VarNode vn && vn.info != null)
+            {
+                Console.WriteLine($"Variable {vn.token.lexeme} on line {vn.token.line} is of type {vn.info.type.typeName()}");
+            }
+            else if (n is MemberNode mn && mn.declaringClass != null)
+            {
+                Console.WriteLine($"Variable {mn.token.lexeme} on line {mn.token.line} is a member of class {mn.declaringClass.name} and is of type {mn.type.typeName()}");
+            }
+        });
 
         Environment.Exit(0);
     }

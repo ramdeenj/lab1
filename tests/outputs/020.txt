@@ -1,0 +1,6 @@
+Variable p on line 15 is of type Point
+Variable x on line 15 is a member of class Point and is of type int
+Variable v on line 16 is of type Vector
+Variable y on line 16 is a member of class Vector and is of type int
+Variable v on line 17 is of type Vector
+Variable v2 on line 17 is of type Vector

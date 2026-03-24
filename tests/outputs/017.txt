@@ -1,0 +1,4 @@
+Variable location on line 15 is a member of class Ogre and is of type Point
+Variable o on line 15 is of type Ogre
+Variable pal on line 15 is a member of class Ogre and is of type Ogre
+Variable x on line 15 is a member of class Point and is of type int
