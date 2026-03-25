@@ -3,6 +3,5 @@
 //}
 
 func main(): int{
-    1+2+3
-    return 39+1+2
+    return 41+1
 }

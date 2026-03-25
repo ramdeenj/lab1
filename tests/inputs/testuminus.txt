@@ -1,0 +1,4 @@
+//{"returns": [254,4294967294]}
+func main(): int {
+    return -2   //254 as u8, 4294967294 as u32
+}

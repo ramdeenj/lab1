@@ -1,0 +1,4 @@
+//{"returns": 9}
+func main() : int{
+    return 10^3   //should be 9
+}

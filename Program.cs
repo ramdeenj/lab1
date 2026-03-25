@@ -58,7 +58,7 @@ public class Program
 
         setParents(p);
 
-        // Phase 2: Resolve hoisted globals (VarNodes with null info)
+        // Phase 2: Resolve hoisted globals
         try
         {
             walkPreorder(p, (TreeNode n) =>
@@ -118,23 +118,7 @@ public class Program
             return;
         }
 
-        // Phase 6: Validate main
-        try
-        {
-            walkPreorder(p, (TreeNode n) =>
-            {
-                if (n is FuncdefNode fd && fd.name == "main" && fd.returnType != null)
-                    Utils.error("Function main must have no return type");
-            });
-        }
-        catch (Exception e)
-        {
-            Console.Error.WriteLine(e.Message);
-            Environment.Exit(1);
-            return;
-        }
-
-        // Phase 7: Code generation
+        // Phase 6: Code generation
         ASM.Asm.clear();
         p.genCode();
 

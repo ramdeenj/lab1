@@ -1,0 +1,4 @@
+//{"returns": [-1,255,4294967295] }
+func main(): int {
+    return -2>>65
+}

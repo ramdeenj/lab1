@@ -1,5 +1,7 @@
-{}
+//{
+//"returns": 42
+//}
 
-func main(){
-    return
+func main(): int{
+    return 42
 }

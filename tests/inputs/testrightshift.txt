@@ -1,0 +1,4 @@
+//{"returns": 25}
+func main(): int {
+    return 100>>2 	//25
+}

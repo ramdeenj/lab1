@@ -69,8 +69,27 @@ public class ReturnNode : StmtNode
         if (!isRealReturn)
             return;
 
-        // genCode for the expression first (if any), then emit ret
-        base.genCode();
+        if (expr != null)
+        {
+            ASM.Asm.emit(new ASM.Comment("return <expr>"));
+            base.genCode(); // generates expr's code
+
+            if (expr.type is FloatType)
+            {
+                // Move float bits into rax for the test harness to read
+                expr.temporary.moveToXmmRegister(ASM.Register.xmm0);
+                ASM.Asm.emit(new ASM.OpMovqXmmReg(ASM.Register.xmm0, ASM.Register.rax));
+            }
+            else
+            {
+                expr.temporary.moveToRegister(ASM.Register.rax);
+            }
+        }
+
+        // Epilogue
+        ASM.Asm.emit(new ASM.Comment("Epilogue"));
+        ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbp, ASM.Register.rsp));
+        ASM.Asm.emit(new ASM.OpPopReg(ASM.Register.rbp));
         ASM.Asm.emit(new ASM.Ret());
     }
 }

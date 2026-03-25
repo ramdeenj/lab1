@@ -76,17 +76,26 @@ def error(*msg):
 
 def main():
     stopOnFirstFail=True
+    stopOnFirstFailBonus=False
+
     global VERBOSE
     global SKIP
     global COMPILER
 
     numGood=0
     numBad=0
+    numGoodBonus=0
+    numBadBonus=0
 
     def good():
         nonlocal numGood
         numGood+=1
         print("OK")
+    def goodBonus():
+        nonlocal numGoodBonus
+        numGoodBonus+=1
+        print("OK")
+
     def bad(*msg):
         nonlocal numBad, stopOnFirstFail
         numBad+=1
@@ -94,17 +103,33 @@ def main():
         print("ERROR")
         print(tmp)
         if stopOnFirstFail:
-            print("Num Passing:",numGood)
-            print("Num Failing:",numBad)
-            raise BooBoo()
+            printStats()
+            sys.exit(1)
+
+    def badBonus(*msg):
+        nonlocal numBadBonus
+        numBadBonus+=1
+        tmp = " ".join([str(q) for q in msg])
+        print("ERROR")
+        print(tmp)
+        if stopOnFirstFailBonus:
+            printStats()
+            sys.exit(1)
+
+    def printStats():
+        print("Num Passing:      ",numGood)
+        if numGoodBonus + numBadBonus > 0:
+            print("Num Bonus Passing:",numGoodBonus)
+        print("Num Failing:      ",numBad)
+        if numGoodBonus + numBadBonus > 0:
+            print("Num Bonus Failing:",numBadBonus)
 
 
 
 
-    opts,args = getopt.gnu_getopt(sys.argv[1:],"kvs:",
-        [ "--stop", "--verbose", "--skip" ]
+    opts,args = getopt.gnu_getopt(sys.argv[1:],"kvs:b",
+        [ "--stop", "--verbose", "--skip","--stopbonus" ]
     )
-
 
     for o,a in opts:
         if o in ["-k","--stop"]:
@@ -113,6 +138,8 @@ def main():
             VERBOSE=True
         elif o in ["-s","--skip"]:
             SKIP=int(a)
+        elif o in ["-b","--stopbonus"]:
+            stopOnFirstFailBonus=True
         else:
             assert 0,f"{o} is not a valid argument"
 
@@ -136,61 +163,96 @@ def main():
 
     for counter,tmp in enumerate(alltests):
         dirpath,f = tmp
-        print(f"Test {counter+1} of {len(alltests)} ({f})...",end="")
+
+
+        with open(f"{dirpath}/{f}") as fp:
+            jdata=[]
+            while True:
+                line = fp.readline().strip()
+                if not line.startswith("//"):
+                    break
+                jdata.append(line[2:].strip())
+
+        try:
+            J = json.loads( " ".join(jdata), parse_int=lambda x: int(x,0) )
+        except json.decoder.JSONDecodeError as e:
+            print("Invalid JSON in",f,":")
+            print("".join(jdata))
+            print(e)
+            sys.exit(1)
+
+        shouldcompile = J.get("compiles",True)
+        isBonus = J.get("bonus",False)
+
+        if isBonus:
+            testText = "Bonus test"
+        else:
+            testText = "Test"
+
+        print(f"{testText} {counter+1} of {len(alltests)} ({f})...",end="")
         if counter < SKIP:
             print("SKIPPED")
             continue
         else:
             print()
 
-        tf = tempfile.NamedTemporaryFile(mode="w",delete=False)
-        try:
-            with open(f"{dirpath}/{f}") as fp:
-                jdata=[]
-                while True:
-                    line = fp.readline().strip()
-                    jdata.append(line)
-                    tf.write("\n")
-                    if len(line) == 0:
-                        break
-                tf.write(fp.read())
-            tf.close()
-            try:
-                J = json.loads( "".join(jdata) )
-            except json.decoder.JSONDecodeError:
-                print("Invalid JSON:")
-                print("".join(jdata))
-                sys.exit(1)
 
-            shouldcompile = J.get("compiles",True)
-            r,o,e = run([COMPILER,tf.name,"out.asm"],quiet=False)
-            didcompile = (r==0)
+        r,o,e = run([COMPILER,dirpath+"/"+f,"out.asm"],quiet=False)
+        didcompile = (r==0)
 
-            if shouldcompile:
-                if didcompile:
-                    try:
-                        r,o,e = run([os.path.join(".","out.exe")],quiet=True)
-                        if "returns" in J and r != J["returns"]:
-                            bad(f"Executable returned {r} but should have returned {J['returns']}")
+        if shouldcompile:
+            if didcompile:
+                try:
+                    r,o,e = run([os.path.join(".","out.exe")],quiet=True)
+                    if "returns" in J:
+                        if type(J["returns"]) != list:
+                            rv = [ J["returns"] ]
                         else:
-                            good()
-                    except BooBoo:
-                        bad("Resulting assembly language file was invalid")
+                            rv = J["returns"]
+                        for candidate in rv:
+                            if r == candidate:
+                                if isBonus:
+                                    goodBonus()
+                                else:
+                                    good()
+                                break
+                        else:
+                            if type(J["returns"]) == list:
+                                msg = f"one of: {J['returns']}"
+                            else:
+                                msg=f"{J['returns']}"
+                            if isBonus:
+                                badBonus(f"Executable returned {r} but should have returned {msg}")
+                            else:
+                                bad(f"Executable returned {r} but should have returned {msg}")
+
+                except BooBoo:
+                    if isBonus:
+                        badBonus("Compile failed")
+                    else:
+                        bad("Compile failed")
+            else:
+                if isBonus:
+                    badBonus("File should compile without error but it did not")
                 else:
                     bad("File should compile without error but it did not")
-            else:
-                if didcompile:
+        else:
+            if didcompile:
+                if isBonus:
+                    badBonus("File should not compile but it did")
+                else:
                     bad("File should not compile but it did")
+            else:
+                if isBonus:
+                    goodBonus()
                 else:
                     good()
 
-        finally:
-            os.remove(tf.name)
 
 
     print("Done. Out of",len(alltests),"tests:")
-    print("Num Passing:",numGood)
-    print("Num Failing:",numBad)
+    printStats()
+
 
 
 try:

@@ -1,0 +1,4 @@
+//{"returns": [205,3435973837], "bonus": true}
+func main() : float {
+    return 2.1*3.25	//205 = 3435973837
+}

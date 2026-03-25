@@ -7,6 +7,9 @@ public abstract class ExprNode : TreeNode
     public Token token;
     public VarType type = null;
 
+    // Assigned by FuncdefNode before code generation
+    public Temporary temporary = null;
+
     protected ExprNode(Token token)
     {
         this.token = token;
@@ -51,55 +54,8 @@ public abstract class ExprNode : TreeNode
 
     static ExprNode parseAnd(Tokenizer T)
     {
-        ExprNode left = parseNot(T);
-        while (T.peek() == "and")
-        {
-            Token op = T.next();
-            ExprNode right = parseNot(T);
-            left = new BinOpNode(op, left, right);
-        }
-        return left;
-    }
-
-    static ExprNode parseNot(Tokenizer T)
-    {
-        if (T.peek() == "not")
-        {
-            Token op = T.next();
-            ExprNode operand = parseNot(T);
-            return new UnaryNode(op, operand);
-        }
-        return parseBitOr(T);
-    }
-
-    static ExprNode parseBitOr(Tokenizer T)
-    {
-        ExprNode left = parseBitXor(T);
-        while (T.peek() == "|")
-        {
-            Token op = T.next();
-            ExprNode right = parseBitXor(T);
-            left = new BinOpNode(op, left, right);
-        }
-        return left;
-    }
-
-    static ExprNode parseBitXor(Tokenizer T)
-    {
-        ExprNode left = parseBitAnd(T);
-        while (T.peek() == "^")
-        {
-            Token op = T.next();
-            ExprNode right = parseBitAnd(T);
-            left = new BinOpNode(op, left, right);
-        }
-        return left;
-    }
-
-    static ExprNode parseBitAnd(Tokenizer T)
-    {
         ExprNode left = parseEquality(T);
-        while (T.peek() == "&")
+        while (T.peek() == "and")
         {
             Token op = T.next();
             ExprNode right = parseEquality(T);
@@ -110,14 +66,48 @@ public abstract class ExprNode : TreeNode
 
     static ExprNode parseEquality(Tokenizer T)
     {
+        ExprNode left = parseBitwiseOr(T);
+        while (T.peek() == "==" || T.peek() == "!=")
+        {
+            Token op = T.next();
+            ExprNode right = parseBitwiseOr(T);
+            left = new BinOpNode(op, left, right);
+        }
+        return left;
+    }
+
+    static ExprNode parseBitwiseOr(Tokenizer T)
+    {
+        ExprNode left = parseBitwiseXor(T);
+        while (T.peek() == "|")
+        {
+            Token op = T.next();
+            ExprNode right = parseBitwiseXor(T);
+            left = new BinOpNode(op, left, right);
+        }
+        return left;
+    }
+
+    static ExprNode parseBitwiseXor(Tokenizer T)
+    {
+        ExprNode left = parseBitwiseAnd(T);
+        while (T.peek() == "^")
+        {
+            Token op = T.next();
+            ExprNode right = parseBitwiseAnd(T);
+            left = new BinOpNode(op, left, right);
+        }
+        return left;
+    }
+
+    static ExprNode parseBitwiseAnd(Tokenizer T)
+    {
         ExprNode left = parseRelational(T);
-        if (T.peek() == "==" || T.peek() == "!=")
+        while (T.peek() == "&")
         {
             Token op = T.next();
             ExprNode right = parseRelational(T);
-            if (T.peek() == "==" || T.peek() == "!=")
-                throw new System.Exception("invalid syntax");
-            return new BinOpNode(op, left, right);
+            left = new BinOpNode(op, left, right);
         }
         return left;
     }
@@ -163,7 +153,7 @@ public abstract class ExprNode : TreeNode
     static ExprNode parseMulDiv(Tokenizer T)
     {
         ExprNode left = parseUnary(T);
-        while (T.peek() == "*" || T.peek() == "/")
+        while (T.peek() == "*" || T.peek() == "/" || T.peek() == "%")
         {
             Token op = T.next();
             ExprNode right = parseUnary(T);

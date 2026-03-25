@@ -108,4 +108,126 @@ public class BinOpNode : ExprNode
                 Utils.error($"Type error: cannot assign {R.typeName()} to {L.typeName()}");
         }
     }
+
+    public override void genCode()
+    {
+        string op = token.lexeme;
+
+        left.genCode();
+        right.genCode();
+
+        if (type is IntType)
+            genCodeInt(op);
+        else if (type is FloatType)
+            genCodeFloat(op);
+        else
+            throw new System.NotImplementedException(
+                $"BinOpNode.genCode: no codegen for op '{op}' on type {type}");
+    }
+
+    private void genCodeInt(string op)
+    {
+        left.temporary.moveToRegister(ASM.Register.rax);
+        right.temporary.moveToRegister(ASM.Register.rbx);
+
+        switch (op)
+        {
+            case "+":
+                ASM.Asm.emit(new ASM.OpAdd(ASM.Register.rax, ASM.Register.rbx));
+                break;
+
+            case "-":
+                ASM.Asm.emit(new ASM.OpSub(ASM.Register.rax, ASM.Register.rbx));
+                break;
+
+            case "*":
+                ASM.Asm.emit(new ASM.OpMul(ASM.Register.rax, ASM.Register.rbx));
+                break;
+
+            case "/":
+                ASM.Asm.emit(new ASM.OpCqo());
+                ASM.Asm.emit(new ASM.OpIDiv(ASM.Register.rbx));
+                break;
+
+            case "%":
+                ASM.Asm.emit(new ASM.OpCqo());
+                ASM.Asm.emit(new ASM.OpIDiv(ASM.Register.rbx));
+                ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rdx, ASM.Register.rax));
+                break;
+
+            case "&":
+                ASM.Asm.emit(new ASM.OpAnd(ASM.Register.rax, ASM.Register.rbx));
+                break;
+
+            case "|":
+                ASM.Asm.emit(new ASM.OpOr(ASM.Register.rax, ASM.Register.rbx));
+                break;
+
+            case "^":
+                ASM.Asm.emit(new ASM.OpXor(ASM.Register.rax, ASM.Register.rbx));
+                break;
+
+            case "<<":
+                // x86 shlq only uses low 6 bits; if count >= 64 result must be 0
+                ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
+                ASM.Asm.emit(new ASM.OpShl(ASM.Register.rax));
+                ASM.Asm.emit(new ASM.Comment("if shift count >= 64, zero the result"));
+                ASM.Asm.emit(new ASM.OpMovConstReg(0, ASM.Register.rdx));
+                ASM.Asm.emit(new ASM.RawOp("    cmpq $64, %rbx"));
+                ASM.Asm.emit(new ASM.RawOp("    cmovgeq %rdx, %rax"));
+                break;
+
+            case ">>":
+                // Arithmetic right shift: clamp count to 63 so sign fills correctly
+                ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
+                ASM.Asm.emit(new ASM.RawOp("    cmpq $63, %rcx"));
+                ASM.Asm.emit(new ASM.RawOp("    movq $63, %rdx"));
+                ASM.Asm.emit(new ASM.RawOp("    cmovgq %rdx, %rcx"));
+                ASM.Asm.emit(new ASM.OpSar(ASM.Register.rax));
+                break;
+
+            case ">>>":
+                // Logical right shift: if count >= 64 result must be 0
+                ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
+                ASM.Asm.emit(new ASM.OpShr(ASM.Register.rax));
+                ASM.Asm.emit(new ASM.Comment("if shift count >= 64, zero the result"));
+                ASM.Asm.emit(new ASM.OpMovConstReg(0, ASM.Register.rdx));
+                ASM.Asm.emit(new ASM.RawOp("    cmpq $64, %rbx"));
+                ASM.Asm.emit(new ASM.RawOp("    cmovgeq %rdx, %rax"));
+                break;
+
+            default:
+                throw new System.NotImplementedException(
+                    $"BinOpNode.genCodeInt: unhandled op '{op}'");
+        }
+
+        temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
+    }
+
+    private void genCodeFloat(string op)
+    {
+        left.temporary.moveToXmmRegister(ASM.Register.xmm0);
+        right.temporary.moveToXmmRegister(ASM.Register.xmm1);
+
+        switch (op)
+        {
+            case "+":
+                ASM.Asm.emit(new ASM.OpAddsd(ASM.Register.xmm0, ASM.Register.xmm1));
+                break;
+            case "-":
+                ASM.Asm.emit(new ASM.OpSubsd(ASM.Register.xmm0, ASM.Register.xmm1));
+                break;
+            case "*":
+                ASM.Asm.emit(new ASM.OpMulsd(ASM.Register.xmm0, ASM.Register.xmm1));
+                break;
+            case "/":
+                ASM.Asm.emit(new ASM.OpDivsd(ASM.Register.xmm0, ASM.Register.xmm1));
+                break;
+            default:
+                throw new System.NotImplementedException(
+                    $"BinOpNode.genCodeFloat: unhandled op '{op}'");
+        }
+
+        temporary.moveFromXmmRegister(ASM.Register.xmm0, ASM.StorageClass.STATIC);
+    }
 }

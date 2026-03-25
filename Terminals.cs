@@ -22,14 +22,14 @@ NUM :: [0-9]+
 STRING :: ""[^""]*""
 ID :: [a-zA-Z_][a-zA-Z0-9_]*
 POWER :: \*\*
-SHIFTLEFT :: 
+SHIFTLEFT :: <<
 SHIFTRIGHT3 :: >>>
 SHIFTRIGHT :: >>
 EQ :: ==
 NEQ :: !=
 LE :: <=
 GE :: >=
-LT :: 
+LT :: <
 GT :: >
 ANDKW :: and
 ORKW :: or
@@ -42,6 +42,7 @@ PLUS :: \+
 MINUS :: -
 STAR :: \*
 SLASH :: /
+PERCENT :: %
 ASSIGN :: =
 DOT :: \.
 COMMA :: ,
@@ -74,9 +75,9 @@ COLON :: :
         {
             var line = line_.Trim();
             if (line.Length == 0) continue;
-            var tmp = line.Split("::");
-            string sym = tmp[0].Trim();
-            string regex = tmp[1].Trim();
+            int sep = line.IndexOf("::");
+            string sym = line.Substring(0, sep).Trim();
+            string regex = line.Substring(sep + 2).Trim();
             terminals.Add(
                 new Terminal(sym, new Regex("\\G(" + regex + ")"))
             );
