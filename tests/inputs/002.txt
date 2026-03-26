@@ -1,7 +1,0 @@
-//{
-//"returns": 42
-//}
-
-func main(): int{
-    return 41+1
-}

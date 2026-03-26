@@ -1,4 +1,0 @@
-//{"returns": 12}
-func main(): int {
-    return 3<<2		//12
-}

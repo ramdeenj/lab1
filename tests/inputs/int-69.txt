@@ -1,0 +1,5 @@
+// {"compiles": true, "returns": 1}
+func main() : bool {
+    return -2 != 3
+}
+

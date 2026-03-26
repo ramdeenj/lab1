@@ -1,0 +1,5 @@
+// {"compiles": true, "returns": 0}
+func main() : bool {
+    return 10+2+1 > 8+5+3
+}
+

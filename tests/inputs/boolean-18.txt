@@ -1,0 +1,5 @@
+// {"compiles": false}
+func main(): bool {
+    return false <= false
+}
+

@@ -7,8 +7,8 @@ main:
     /* Allocate space for 3 temporaries */
     subq $48, %rsp
     /* return <expr> */
-    /* Constant [NUM 3 10] */
-    movq $10, %rax
+    /* Constant [NUM 3 3] */
+    movq $3, %rax
     /* copy register to temporary 0 */
     movq %rax, -8(%rbp)
     /* set storage class of temporary 0 */
@@ -23,7 +23,9 @@ main:
     movq -8(%rbp), %rax
     /* copy temporary 1 value to register */
     movq -24(%rbp), %rbx
-    xorq %rbx, %rax
+    cmpq %rbx, %rax
+    setne %al
+    movzbl %al, %eax
     /* copy register to temporary 2 */
     movq %rax, -40(%rbp)
     /* set storage class of temporary 2 */

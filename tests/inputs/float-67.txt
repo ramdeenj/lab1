@@ -1,0 +1,5 @@
+// {"bonus": true, "compiles": true, "returns": 0}
+func main() : bool {
+    return 1000.3 == -1000.4
+}
+

@@ -120,6 +120,8 @@ public class BinOpNode : ExprNode
             genCodeInt(op);
         else if (type is FloatType)
             genCodeFloat(op);
+        else if (type is BoolType)
+            genCodeBool(op);
         else
             throw new System.NotImplementedException(
                 $"BinOpNode.genCode: no codegen for op '{op}' on type {type}");
@@ -168,7 +170,6 @@ public class BinOpNode : ExprNode
                 break;
 
             case "<<":
-                // x86 shlq only uses low 6 bits; if count >= 64 result must be 0
                 ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
                 ASM.Asm.emit(new ASM.OpShl(ASM.Register.rax));
                 ASM.Asm.emit(new ASM.Comment("if shift count >= 64, zero the result"));
@@ -178,7 +179,6 @@ public class BinOpNode : ExprNode
                 break;
 
             case ">>":
-                // Arithmetic right shift: clamp count to 63 so sign fills correctly
                 ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
                 ASM.Asm.emit(new ASM.RawOp("    cmpq $63, %rcx"));
                 ASM.Asm.emit(new ASM.RawOp("    movq $63, %rdx"));
@@ -187,7 +187,6 @@ public class BinOpNode : ExprNode
                 break;
 
             case ">>>":
-                // Logical right shift: if count >= 64 result must be 0
                 ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
                 ASM.Asm.emit(new ASM.OpShr(ASM.Register.rax));
                 ASM.Asm.emit(new ASM.Comment("if shift count >= 64, zero the result"));
@@ -229,5 +228,56 @@ public class BinOpNode : ExprNode
         }
 
         temporary.moveFromXmmRegister(ASM.Register.xmm0, ASM.StorageClass.STATIC);
+    }
+
+    private void genCodeBool(string op)
+    {
+        // and / or: bools are 0 or 1, so bitwise AND/OR works perfectly
+        if (op == "and" || op == "or")
+        {
+            left.temporary.moveToRegister(ASM.Register.rax);
+            right.temporary.moveToRegister(ASM.Register.rbx);
+            if (op == "and")
+                ASM.Asm.emit(new ASM.OpAnd(ASM.Register.rax, ASM.Register.rbx));
+            else
+                ASM.Asm.emit(new ASM.OpOr(ASM.Register.rax, ASM.Register.rbx));
+            temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
+            return;
+        }
+
+        VarType operandType = left.type;
+
+        if (operandType is FloatType)
+        {
+            left.temporary.moveToXmmRegister(ASM.Register.xmm0);
+            right.temporary.moveToXmmRegister(ASM.Register.xmm1);
+            // compare, then immediately setcc with no instructions in between
+            ASM.Asm.emit(new ASM.RawOp("    comisd %xmm1, %xmm0"));
+        }
+        else
+        {
+            left.temporary.moveToRegister(ASM.Register.rax);
+            right.temporary.moveToRegister(ASM.Register.rbx);
+            // compare, then immediately setcc with no instructions in between
+            ASM.Asm.emit(new ASM.RawOp("    cmpq %rbx, %rax"));
+        }
+
+        string setcc = op switch
+        {
+            "==" => "sete",
+            "!=" => "setne",
+            "<"  => operandType is FloatType ? "setb"  : "setl",
+            "<=" => operandType is FloatType ? "setbe" : "setle",
+            ">"  => operandType is FloatType ? "seta"  : "setg",
+            ">=" => operandType is FloatType ? "setae" : "setge",
+            _    => throw new System.NotImplementedException(
+                        $"BinOpNode.genCodeBool: unhandled op '{op}'")
+        };
+
+        // setcc writes only the low byte — use movzbl to zero-extend into eax
+        // (writing eax automatically zeros the upper 32 bits of rax on x86-64)
+        ASM.Asm.emit(new ASM.RawOp($"    {setcc} %al"));
+        ASM.Asm.emit(new ASM.RawOp("    movzbl %al, %eax"));
+        temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
     }
 }

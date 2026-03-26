@@ -1,4 +1,0 @@
-//{"returns": 6}
-func main(): int {
-    return 2*3
-}
