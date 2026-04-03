@@ -1,0 +1,5 @@
+// {"compiles": true, "hang": false, "crash": false, "returns": 0}
+func main() : bool{
+    return 5<2
+}
+

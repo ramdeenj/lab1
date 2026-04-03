@@ -12,7 +12,12 @@ THIS :: this
 FUNC :: func
 RETURN :: return
 IF :: if
+ELSE :: else
 WHILE :: while
+REPEAT :: repeat
+UNTIL :: until
+BREAK :: break
+CONTINUE :: continue
 VAR :: var
 TRUE :: true
 FALSE :: false

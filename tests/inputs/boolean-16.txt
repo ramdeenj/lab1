@@ -1,5 +1,0 @@
-// {"compiles": false}
-func main(): bool {
-    return true < true
-}
-

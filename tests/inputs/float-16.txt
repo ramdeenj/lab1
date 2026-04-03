@@ -1,5 +1,0 @@
-// {"bonus": true, "compiles": true, "returns": 1}
-func main() : bool {
-    return 10.6 == 10.6
-}
-

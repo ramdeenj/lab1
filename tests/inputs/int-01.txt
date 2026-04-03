@@ -1,5 +1,0 @@
-// {"compiles": true, "returns": 0}
-func main() : bool {
-    return 20+3 > 30-1
-}
-

@@ -1,0 +1,6 @@
+// {"compiles": false, "hang": false, "crash": false}
+func main(): int{
+    return 102
+    continue
+}
+

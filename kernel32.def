@@ -8,3 +8,4 @@ EXPORTS
     CloseHandle
     VirtualAlloc
     VirtualFree
+    SetErrorMode

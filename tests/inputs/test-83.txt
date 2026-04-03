@@ -1,0 +1,7 @@
+// {"compiles": true, "hang": true, "crash": false}
+func main(): int {
+    repeat{
+    } until( 3>4 )
+    return 100
+}
+

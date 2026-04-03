@@ -1,0 +1,10 @@
+// {"compiles": true, "hang": false, "crash": false, "returns": 101}
+func main(): int {
+    if( 3>4 ) {
+        return 100
+    }    else {
+        return 101
+    }
+    return 102
+}
+

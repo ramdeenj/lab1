@@ -1,0 +1,5 @@
+// {"compiles": true, "hang": false, "crash": true}
+func main(): bool {
+    return true and 15%3<2%0
+}
+

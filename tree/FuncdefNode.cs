@@ -26,7 +26,6 @@ public class FuncdefNode : TreeNode
 
     public override void genCode()
     {
-        // Walk tree post-order, assign a Temporary to every ExprNode
         int counter = 0;
         maxTemporaries = 0;
         assignTemporaries(this, ref counter);
@@ -39,6 +38,14 @@ public class FuncdefNode : TreeNode
         ASM.Asm.emit(new ASM.Comment($"Allocate space for {maxTemporaries} temporaries"));
         if (maxTemporaries > 0)
             ASM.Asm.emit(new ASM.OpSubRegConstant(maxTemporaries * 16, ASM.Register.rsp));
+
+        // Suppress Windows crash dialogs so crashes are detectable by exit code
+        if (name == "main")
+        {
+            ASM.Asm.emit(new ASM.Comment("Suppress Windows crash dialogs"));
+            ASM.Asm.emit(new ASM.RawOp("    movq $0x8007, %rcx"));
+            ASM.Asm.emit(new ASM.RawOp("    callq SetErrorMode"));
+        }
 
         body.genCode();
 

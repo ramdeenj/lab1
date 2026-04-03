@@ -152,12 +152,73 @@ public class ProgramNode : TreeNode
         SymbolTable.declare(id, vtype, new ParameterLocation());
     }
 
+    static CondNode findInnermostIf(CondNode cn)
+    {
+        if (cn == null) return null;
+        if (cn.elseBranch == null) return cn;
+        if (cn.elseBranch is CondNode inner) return findInnermostIf(inner);
+        return null;
+    }
+
     static StmtsNode parseStmts(Tokenizer T)
     {
         var stmts = new List<StmtNode>();
-        while (T.peek() != "}" && T.peek() != "")
+        while (T.peek() != "}" && T.peek() != "" && T.peek() != "else")
+        {
             stmts.Add(parseStmt(T));
+
+            // Handle else/else if chain attached to last if statement
+            while (T.peek() == "else")
+            {
+                // else is only valid if the if is the only statement so far
+                if (stmts.Count > 1)
+                {
+                    Utils.error("'else' without matching 'if'");
+                    return null;
+                }
+
+                var last = stmts[stmts.Count - 1];
+                CondNode target = findInnermostIf(last as CondNode);
+                if (target == null)
+                {
+                    Utils.error("'else' without matching 'if'");
+                    return null;
+                }
+
+                T.next(); // consume 'else'
+                if (T.peek() == "if")
+                {
+                    target.elseBranch = parseIf(T);
+                }
+                else
+                {
+                    T.expect("LBRACE");
+                    SymbolTable.addScope();
+                    StmtsNode elseBody = parseStmts(T);
+                    T.expect("RBRACE");
+                    SymbolTable.removeScope();
+                    target.elseBranch = new ElseNode(elseBody);
+                    break; // plain else ends the chain
+                }
+            }
+        }
+
+        if (T.peek() == "else")
+            Utils.error("'else' without matching 'if'");
+
         return new StmtsNode(stmts);
+    }
+
+    static ExprNode parseCond(Tokenizer T)
+    {
+        if (T.peek() == "(")
+        {
+            T.next();
+            ExprNode cond = ExprNode.parse(T);
+            T.expect("RPAREN");
+            return cond;
+        }
+        return ExprNode.parse(T);
     }
 
     static StmtNode parseStmt(Tokenizer T)
@@ -171,25 +232,45 @@ public class ProgramNode : TreeNode
         }
         else if (T.peek() == "if")
         {
-            T.next();
-            ExprNode cond = ExprNode.parse(T);
-            T.expect("LBRACE");
-            SymbolTable.addScope();
-            StmtsNode body = parseStmts(T);
-            T.expect("RBRACE");
-            SymbolTable.removeScope();
-            return new CondNode(cond, body);
+            return parseIf(T);
+        }
+        else if (T.peek() == "else")
+        {
+            Utils.error("'else' without matching 'if'");
+            return null;
         }
         else if (T.peek() == "while")
         {
             T.next();
-            ExprNode cond = ExprNode.parse(T);
+            ExprNode cond = parseCond(T);
             T.expect("LBRACE");
             SymbolTable.addScope();
             StmtsNode body = parseStmts(T);
             T.expect("RBRACE");
             SymbolTable.removeScope();
             return new LoopNode(cond, body);
+        }
+        else if (T.peek() == "repeat")
+        {
+            T.next();
+            T.expect("LBRACE");
+            SymbolTable.addScope();
+            StmtsNode body = parseStmts(T);
+            T.expect("RBRACE");
+            SymbolTable.removeScope();
+            T.expect("UNTIL");
+            ExprNode cond = parseCond(T);
+            return new RepeatNode(body, cond);
+        }
+        else if (T.peek() == "break")
+        {
+            T.next();
+            return new BreakNode();
+        }
+        else if (T.peek() == "continue")
+        {
+            T.next();
+            return new ContinueNode();
         }
         else if (T.peek() == "var")
         {
@@ -200,6 +281,20 @@ public class ProgramNode : TreeNode
             ExprNode e = ExprNode.parse(T);
             return new ReturnNode(e, isRealReturn: false);
         }
+    }
+
+    static CondNode parseIf(Tokenizer T)
+    {
+        T.expect("IF");
+        ExprNode cond = parseCond(T);
+
+        T.expect("LBRACE");
+        SymbolTable.addScope();
+        StmtsNode thenBranch = parseStmts(T);
+        T.expect("RBRACE");
+        SymbolTable.removeScope();
+
+        return new CondNode(cond, thenBranch, null);
     }
 
     public override List<TreeNode> getChildNodes()

@@ -5,6 +5,9 @@ public class LoopNode : StmtNode
     public ExprNode condition;
     public StmtsNode body;
 
+    public ASM.Label testLabel = new ASM.Label();
+    public ASM.Label exitLabel = new ASM.Label();
+
     public LoopNode(ExprNode condition, StmtsNode body)
     {
         this.condition = condition;
@@ -19,26 +22,21 @@ public class LoopNode : StmtNode
     public override void typeCheck()
     {
         if (condition.type != null && !(condition.type is BoolType))
-            Utils.error($"Type error: 'while' condition must be bool, got {condition.type.GetType().Name}");
+            Utils.error($"Type error: 'while' condition must be bool, got {condition.type.typeName()}");
     }
 
     public override void genCode()
     {
-        var topLabel = new ASM.Label();
-        var endLabel = new ASM.Label();
-
-        ASM.Asm.emit(topLabel);
+        ASM.Asm.emit(testLabel);
 
         condition.genCode();
         condition.temporary.moveToRegister(ASM.Register.rax);
-
         ASM.Asm.emit(new ASM.RawOp("    testq %rax, %rax"));
-        ASM.Asm.emit(new ASM.RawOp($"    je {endLabel.lbl}"));
+        ASM.Asm.emit(new ASM.RawOp($"    je {exitLabel.lbl}"));
 
         body.genCode();
 
-        ASM.Asm.emit(new ASM.RawOp($"    jmp {topLabel.lbl}"));
-
-        ASM.Asm.emit(endLabel);
+        ASM.Asm.emit(new ASM.RawOp($"    jmp {testLabel.lbl}"));
+        ASM.Asm.emit(exitLabel);
     }
 }

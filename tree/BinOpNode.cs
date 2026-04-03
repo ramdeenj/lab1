@@ -113,6 +113,13 @@ public class BinOpNode : ExprNode
     {
         string op = token.lexeme;
 
+        // Short-circuit: evaluate left first, maybe skip right
+        if (op == "and" || op == "or")
+        {
+            genCodeShortCircuit(op);
+            return;
+        }
+
         left.genCode();
         right.genCode();
 
@@ -127,6 +134,33 @@ public class BinOpNode : ExprNode
                 $"BinOpNode.genCode: no codegen for op '{op}' on type {type}");
     }
 
+    private void genCodeShortCircuit(string op)
+    {
+        var skipLabel = new ASM.Label();
+
+        left.genCode();
+        left.temporary.moveToRegister(ASM.Register.rax);
+
+        if (op == "and")
+        {
+            // left is false -> skip right, result is 0
+            ASM.Asm.emit(new ASM.RawOp("    testq %rax, %rax"));
+            ASM.Asm.emit(new ASM.RawOp($"    je {skipLabel.lbl}"));
+        }
+        else
+        {
+            // left is true -> skip right, result is 1
+            ASM.Asm.emit(new ASM.RawOp("    testq %rax, %rax"));
+            ASM.Asm.emit(new ASM.RawOp($"    jne {skipLabel.lbl}"));
+        }
+
+        right.genCode();
+        right.temporary.moveToRegister(ASM.Register.rax);
+
+        ASM.Asm.emit(skipLabel);
+        temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
+    }
+
     private void genCodeInt(string op)
     {
         left.temporary.moveToRegister(ASM.Register.rax);
@@ -137,38 +171,30 @@ public class BinOpNode : ExprNode
             case "+":
                 ASM.Asm.emit(new ASM.OpAdd(ASM.Register.rax, ASM.Register.rbx));
                 break;
-
             case "-":
                 ASM.Asm.emit(new ASM.OpSub(ASM.Register.rax, ASM.Register.rbx));
                 break;
-
             case "*":
                 ASM.Asm.emit(new ASM.OpMul(ASM.Register.rax, ASM.Register.rbx));
                 break;
-
             case "/":
                 ASM.Asm.emit(new ASM.OpCqo());
                 ASM.Asm.emit(new ASM.OpIDiv(ASM.Register.rbx));
                 break;
-
             case "%":
                 ASM.Asm.emit(new ASM.OpCqo());
                 ASM.Asm.emit(new ASM.OpIDiv(ASM.Register.rbx));
                 ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rdx, ASM.Register.rax));
                 break;
-
             case "&":
                 ASM.Asm.emit(new ASM.OpAnd(ASM.Register.rax, ASM.Register.rbx));
                 break;
-
             case "|":
                 ASM.Asm.emit(new ASM.OpOr(ASM.Register.rax, ASM.Register.rbx));
                 break;
-
             case "^":
                 ASM.Asm.emit(new ASM.OpXor(ASM.Register.rax, ASM.Register.rbx));
                 break;
-
             case "<<":
                 ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
                 ASM.Asm.emit(new ASM.OpShl(ASM.Register.rax));
@@ -177,7 +203,6 @@ public class BinOpNode : ExprNode
                 ASM.Asm.emit(new ASM.RawOp("    cmpq $64, %rbx"));
                 ASM.Asm.emit(new ASM.RawOp("    cmovgeq %rdx, %rax"));
                 break;
-
             case ">>":
                 ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
                 ASM.Asm.emit(new ASM.RawOp("    cmpq $63, %rcx"));
@@ -185,7 +210,6 @@ public class BinOpNode : ExprNode
                 ASM.Asm.emit(new ASM.RawOp("    cmovgq %rdx, %rcx"));
                 ASM.Asm.emit(new ASM.OpSar(ASM.Register.rax));
                 break;
-
             case ">>>":
                 ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbx, ASM.Register.rcx));
                 ASM.Asm.emit(new ASM.OpShr(ASM.Register.rax));
@@ -194,7 +218,6 @@ public class BinOpNode : ExprNode
                 ASM.Asm.emit(new ASM.RawOp("    cmpq $64, %rbx"));
                 ASM.Asm.emit(new ASM.RawOp("    cmovgeq %rdx, %rax"));
                 break;
-
             default:
                 throw new System.NotImplementedException(
                     $"BinOpNode.genCodeInt: unhandled op '{op}'");
@@ -232,33 +255,18 @@ public class BinOpNode : ExprNode
 
     private void genCodeBool(string op)
     {
-        // and / or: bools are 0 or 1, so bitwise AND/OR works perfectly
-        if (op == "and" || op == "or")
-        {
-            left.temporary.moveToRegister(ASM.Register.rax);
-            right.temporary.moveToRegister(ASM.Register.rbx);
-            if (op == "and")
-                ASM.Asm.emit(new ASM.OpAnd(ASM.Register.rax, ASM.Register.rbx));
-            else
-                ASM.Asm.emit(new ASM.OpOr(ASM.Register.rax, ASM.Register.rbx));
-            temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
-            return;
-        }
-
         VarType operandType = left.type;
 
         if (operandType is FloatType)
         {
             left.temporary.moveToXmmRegister(ASM.Register.xmm0);
             right.temporary.moveToXmmRegister(ASM.Register.xmm1);
-            // compare, then immediately setcc with no instructions in between
             ASM.Asm.emit(new ASM.RawOp("    comisd %xmm1, %xmm0"));
         }
         else
         {
             left.temporary.moveToRegister(ASM.Register.rax);
             right.temporary.moveToRegister(ASM.Register.rbx);
-            // compare, then immediately setcc with no instructions in between
             ASM.Asm.emit(new ASM.RawOp("    cmpq %rbx, %rax"));
         }
 
@@ -274,8 +282,6 @@ public class BinOpNode : ExprNode
                         $"BinOpNode.genCodeBool: unhandled op '{op}'")
         };
 
-        // setcc writes only the low byte — use movzbl to zero-extend into eax
-        // (writing eax automatically zeros the upper 32 bits of rax on x86-64)
         ASM.Asm.emit(new ASM.RawOp($"    {setcc} %al"));
         ASM.Asm.emit(new ASM.RawOp("    movzbl %al, %eax"));
         temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);

@@ -28,12 +28,10 @@ public class UnaryNode : ExprNode
                 if (T is FloatType) { type = new FloatType(); return; }
                 Utils.error($"Type error: cannot negate {T.GetType().Name}");
                 break;
-
             case "~":
                 if (T is IntType) { type = new IntType(); return; }
                 Utils.error($"Type error: cannot apply '~' to {T.GetType().Name}");
                 break;
-
             case "not":
                 if (T is BoolType) { type = new BoolType(); return; }
                 Utils.error($"Type error: cannot apply 'not' to {T.GetType().Name}");
@@ -50,29 +48,24 @@ public class UnaryNode : ExprNode
         if (type is IntType)
         {
             operand.temporary.moveToRegister(ASM.Register.rax);
-
             switch (op)
             {
                 case "-":
                     ASM.Asm.emit(new ASM.Comment("integer negate"));
                     ASM.Asm.emit(new ASM.OpNeg(ASM.Register.rax));
                     break;
-
                 case "~":
                     ASM.Asm.emit(new ASM.Comment("bitwise NOT"));
                     ASM.Asm.emit(new ASM.OpNot(ASM.Register.rax));
                     break;
-
                 default:
                     throw new System.NotImplementedException(
                         $"UnaryNode.genCode: unhandled int op '{op}'");
             }
-
             temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
         }
         else if (type is FloatType)
         {
-            // Float negate: XOR the sign bit using integer ops
             operand.temporary.moveToRegister(ASM.Register.rax);
             long signBit = unchecked((long)0x8000000000000000L);
             ASM.Asm.emit(new ASM.Comment("float negate: flip sign bit"));
@@ -80,6 +73,14 @@ public class UnaryNode : ExprNode
             ASM.Asm.emit(new ASM.OpXor(ASM.Register.rax, ASM.Register.rbx));
             ASM.Asm.emit(new ASM.OpMovqRegXmm(ASM.Register.rax, ASM.Register.xmm0));
             temporary.moveFromXmmRegister(ASM.Register.xmm0, ASM.StorageClass.STATIC);
+        }
+        else if (type is BoolType)
+        {
+            // not: XOR with 1 flips 0->1 and 1->0
+            operand.temporary.moveToRegister(ASM.Register.rax);
+            ASM.Asm.emit(new ASM.Comment("boolean not"));
+            ASM.Asm.emit(new ASM.RawOp("    xorq $1, %rax"));
+            temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
         }
         else
         {

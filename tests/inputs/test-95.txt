@@ -1,0 +1,15 @@
+// {"compiles": false, "hang": false, "crash": false}
+func main(): int {
+    return 99
+    if true {
+        return 1
+    }
+    
+    
+    
+    
+    else {
+        return 1
+    }
+}
+

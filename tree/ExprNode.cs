@@ -176,6 +176,12 @@ public abstract class ExprNode : TreeNode
             ExprNode operand = parseUnary(T);
             return new UnaryNode(op, operand);
         }
+        if (T.peek() == "not")
+        {
+            Token op = T.next();
+            ExprNode operand = parseUnary(T);
+            return new UnaryNode(op, operand);
+        }
         return parsePower(T);
     }
 

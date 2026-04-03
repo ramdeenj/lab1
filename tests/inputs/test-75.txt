@@ -1,0 +1,7 @@
+// {"compiles": true, "hang": true, "crash": false}
+func main(): int {
+    while( true ) {
+    }
+    return 102
+}
+

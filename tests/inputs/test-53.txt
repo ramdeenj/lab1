@@ -1,0 +1,5 @@
+// {"compiles": true, "hang": false, "crash": true}
+func main():bool{
+    return 1%0<4%2 or 9%3<8%2
+}
+

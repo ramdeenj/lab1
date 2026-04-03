@@ -1,0 +1,14 @@
+// {"compiles": true, "hang": false, "crash": false, "returns": 100}
+func main(): int {
+    if( 1+2 > 1 ){
+        return 100
+    } else if( 3+4 > 2 ){
+        return 150
+    } else if( 5+6 > 3 ){
+        return 200
+    } else {
+        return 250
+    }
+    return 99
+}
+

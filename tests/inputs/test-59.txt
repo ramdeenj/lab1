@@ -1,0 +1,8 @@
+// {"compiles": false, "hang": false, "crash": false}
+func main(): bool {
+    if( 5 ) {
+        return 100
+    }
+    return 102
+}
+

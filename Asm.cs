@@ -38,7 +38,7 @@ namespace ASM
     {
         public readonly string comment;
         public Comment(string s) { this.comment = s; }
-        public override string ToString() => $"    /* {comment} */";
+        public override string ToString() => $"    // {comment}";
     }
 
     public class RawOp : Op
@@ -77,13 +77,9 @@ namespace ASM
         public override string ToString()
         {
             if (value >= int.MinValue && value <= int.MaxValue)
-            {
                 return $"    movq ${value}, %{dst}";
-            }
             else
-            {
                 return $"    movabsq ${value}, %{dst}";
-            }
         }
     }
 
@@ -288,6 +284,7 @@ namespace ASM
         {
             outputFile.WriteLine(".section .text");
             outputFile.WriteLine($"    .globl {entryLabel}");
+            outputFile.WriteLine("    .extern SetErrorMode");
             foreach (var op in opcodes)
                 outputFile.WriteLine(op);
             outputFile.WriteLine(".section .data");
