@@ -289,6 +289,11 @@ namespace ASM
                 outputFile.WriteLine(op);
             outputFile.WriteLine(".section .data");
             outputFile.WriteLine(".section .bss");
+            // Emit global variable declarations
+            foreach (var (name, type) in SymbolTable.GlobalVars)
+            {
+                outputFile.WriteLine($"    .lcomm {name}, 8");
+            }
         }
     }
 }

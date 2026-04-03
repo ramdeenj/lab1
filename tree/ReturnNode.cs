@@ -67,7 +67,12 @@ public class ReturnNode : StmtNode
     public override void genCode()
     {
         if (!isRealReturn)
+        {
+            // Still need to evaluate the expression (e.g. for assignment side effects)
+            if (expr != null)
+                base.genCode();
             return;
+        }
 
         if (expr != null)
         {

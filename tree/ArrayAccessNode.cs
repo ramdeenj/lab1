@@ -21,4 +21,9 @@ public class ArrayAccessNode : ExprNode
     {
         // Type unknown without array type inf
     }
+
+    public void storeFromRegister(ASM.Register reg)
+    {
+        throw new System.NotImplementedException("ArrayAccessNode assignment not yet implemented");
+    }
 }

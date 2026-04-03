@@ -113,6 +113,41 @@ public class BinOpNode : ExprNode
     {
         string op = token.lexeme;
 
+        // Assignment: evaluate right side, store into left-side variable
+        if (op == "=")
+        {
+            right.genCode();
+
+            // Move value into rax
+            if (right.type is FloatType)
+            {
+                right.temporary.moveToXmmRegister(ASM.Register.xmm0);
+                ASM.Asm.emit(new ASM.OpMovqXmmReg(ASM.Register.xmm0, ASM.Register.rax));
+            }
+            else
+            {
+                right.temporary.moveToRegister(ASM.Register.rax);
+            }
+
+            // Store into the left-hand variable
+            if (left is VarNode vn)
+            {
+                vn.storeFromRegister();
+            }
+            else if (left is DotNode dn)
+            {
+                dn.storeFromRegister(ASM.Register.rax);
+            }
+            else if (left is ArrayAccessNode an)
+            {
+                an.storeFromRegister(ASM.Register.rax);
+            }
+
+            // The result of assignment is the rhs value (stored in temporary)
+            temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
+            return;
+        }
+
         // Short-circuit: evaluate left first, maybe skip right
         if (op == "and" || op == "or")
         {

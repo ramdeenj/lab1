@@ -30,8 +30,22 @@ public class VarDeclNode : StmtNode
         Token typeToken = T.next();
         VarType vtype = VarType.fromToken(typeToken);
 
+        if (location is GlobalLocation)
+        {
+            // Declare in global scope with a proper label for .bss
+            SymbolTable.declareInGlobal(id, vtype);
+        }
+        else if (location is LocalLocation)
+        {
+            location = new LocalLocation(SymbolTable.allocLocal());
+            SymbolTable.declare(id, vtype, location);
+        }
+        else
+        {
+            SymbolTable.declare(id, vtype, location);
+        }
+
         var node = new VarDeclNode(id, vtype);
-        SymbolTable.declare(id, vtype, location);
         node.info = SymbolTable.lookupIfExists(id.lexeme);
         return node;
     }

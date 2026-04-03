@@ -1,0 +1,22 @@
+// {"compiles": true, "hang": false, "crash": false, "returns": 45}
+func main() : int {
+    var x: int
+    var y: int
+    var z: int
+    var flag: bool
+    x=0
+    y=0
+    z=0
+    flag=true
+    while( flag ) {
+        var tmp: int
+        tmp = y+x
+        y = tmp
+        x = x + 1
+        if ( x >= 10 ) {
+            flag=false
+        }
+    }
+    return y
+}
+

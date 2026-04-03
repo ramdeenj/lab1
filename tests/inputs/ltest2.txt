@@ -1,0 +1,10 @@
+// {"compiles": true, "hang": false, "crash": false, "returns": 10}
+
+func main() : int {
+    var x: int
+    var y: int
+    x = 10
+    y = 20
+    return x
+}
+

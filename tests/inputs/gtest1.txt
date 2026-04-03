@@ -1,0 +1,7 @@
+// {"compiles": true, "hang": false, "crash": false, "returns": 10}
+var x: int
+func main():int {
+    x = 10
+    return x
+}
+

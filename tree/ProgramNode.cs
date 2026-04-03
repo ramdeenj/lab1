@@ -28,6 +28,7 @@ public class ProgramNode : TreeNode
     public static ProgramNode parse(Tokenizer T)
     {
         resetClassRegistry();
+        SymbolTable.reset();  // clear globals, locals, and global var list
         var topLevel = new List<TreeNode>();
 
         while (T.peek() != "")
@@ -133,13 +134,19 @@ public class ProgramNode : TreeNode
             SymbolTable.declareInGlobal(nameToken, new FuncType(returnType, paramList));
         }
 
+        SymbolTable.resetLocals();  // reset local slot counter for this function
+
         T.expect("LBRACE");
         StmtsNode body = parseStmts(T);
         T.expect("RBRACE");
 
+        int localBytes = SymbolTable.getLocalSlotCount() * 8;  // capture after parsing body
+
         SymbolTable.removeScope();
 
-        return new FuncdefNode(funcName, nameToken, parameters, body, returnType);
+        var funcNode = new FuncdefNode(funcName, nameToken, parameters, body, returnType);
+        funcNode.localVarBytes = localBytes;
+        return funcNode;
     }
 
     static void parseParam(Tokenizer T, List<(Token, VarType)> parameters, string funcName)
@@ -274,7 +281,7 @@ public class ProgramNode : TreeNode
         }
         else if (T.peek() == "var")
         {
-            return VarDeclNode.parse(T, new LocalLocation());
+            return VarDeclNode.parse(T, new LocalLocation(0));
         }
         else
         {

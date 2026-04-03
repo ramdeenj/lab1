@@ -1,5 +1,0 @@
-// {"compiles": true, "hang": false, "crash": false, "returns": 0}
-func main():bool{
-    return 20%10<1 and false
-}
-

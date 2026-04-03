@@ -72,4 +72,9 @@ public class DotNode : ExprNode
             return;
         }
     }
+
+    public void storeFromRegister(ASM.Register reg)
+    {
+        throw new System.NotImplementedException("DotNode assignment not yet implemented");
+    }
 }

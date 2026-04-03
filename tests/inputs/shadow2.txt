@@ -1,0 +1,16 @@
+// {"compiles": true, "hang": false, "crash": false, "returns": 7}
+func main(): int {
+    var x: int
+    var y: int
+    var z: int
+    x=1
+    y=2
+    if( true ){
+        var x: int
+        x=4
+        z=x
+    }
+    z=x+y+z
+    return z
+}
+

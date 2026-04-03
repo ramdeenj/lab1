@@ -1,0 +1,14 @@
+// {"compiles": true, "hang": false, "crash": false, "returns": 30}
+
+func main() : int {
+    var x: int
+    var y: int
+    var z: int
+    x = 10
+    y = 20
+    z = x+y
+    x = y + y
+    y = 100
+    return z
+}
+

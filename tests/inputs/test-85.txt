@@ -1,9 +1,0 @@
-// {"compiles": true, "hang": false, "crash": false, "returns": 100}
-func main(): int {
-    while( 10>5 ){
-        break
-        return 102
-    }
-    return 100
-}
-

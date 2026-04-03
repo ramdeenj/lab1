@@ -9,6 +9,7 @@ public class FuncdefNode : TreeNode
     public VarType returnType;
 
     public int maxTemporaries = 0;
+    public int localVarBytes = 0;  // bytes needed for local variables
 
     public FuncdefNode(string name, Token nameToken, List<(Token, VarType)> parameters, StmtsNode body, VarType returnType)
     {
@@ -30,14 +31,29 @@ public class FuncdefNode : TreeNode
         maxTemporaries = 0;
         assignTemporaries(this, ref counter);
 
+        // How many bytes of locals were allocated during parse?
+        // We stored this per-function at parse time.
+        int localBytes = localVarBytes;
+
         // Prologue
         ASM.Asm.emit(new ASM.Comment($"********** {name} **********"));
         ASM.Asm.emit(new ASM.Label(name));
         ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rbp));
         ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rsp, ASM.Register.rbp));
-        ASM.Asm.emit(new ASM.Comment($"Allocate space for {maxTemporaries} temporaries"));
-        if (maxTemporaries > 0)
-            ASM.Asm.emit(new ASM.OpSubRegConstant(maxTemporaries * 16, ASM.Register.rsp));
+
+        // Allocate space for temporaries AND local variables.
+        // Temporaries start at rbp-8, -16, ... (each 16 bytes for value+class)
+        // Local variables are placed BELOW the temporaries region.
+        // We put locals at: rbp - (maxTemporaries*16) - 8, -16, ...
+        // But simpler: locals use rbp-relative offsets that are tracked in LocalLocation.
+        // We just need to allocate enough stack space.
+        int totalBytes = maxTemporaries * 16 + localBytes;
+        // Round up to 16-byte alignment
+        totalBytes = (totalBytes + 15) & ~15;
+
+        ASM.Asm.emit(new ASM.Comment($"Allocate {maxTemporaries} temporaries + {localBytes} bytes for locals"));
+        if (totalBytes > 0)
+            ASM.Asm.emit(new ASM.OpSubRegConstant(totalBytes, ASM.Register.rsp));
 
         // Suppress Windows crash dialogs so crashes are detectable by exit code
         if (name == "main")
