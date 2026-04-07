@@ -1,0 +1,12 @@
+// {"output": null, "input": null, "compiles": false}
+
+func main() : int {
+    var x: int
+    x = foo()
+    return x + 1
+}
+
+func bar() : int {
+    return 42
+}
+

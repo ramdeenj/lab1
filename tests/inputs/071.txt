@@ -1,0 +1,17 @@
+// {"returns": 123}
+func main(): int {
+    return 123
+}
+
+func foo(x: int){
+    return
+}
+
+func bar(x: int){
+    return
+}
+
+func baz(x: int){
+    return
+}
+

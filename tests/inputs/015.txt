@@ -1,0 +1,66 @@
+// {"returns": 4}
+
+
+func main(): int{
+    var x: int
+    x = maxi(3+10,1+11,4+12,1+13,5+87,9+44,2+1,6+4,5+19,3*2)
+    return x
+}
+
+
+func maxi(
+    a0:int,
+    a1:int,
+    a2:int,
+    a3:int,
+    a4:int,
+    a5:int,
+    a6:int,
+    a7:int,
+    a8:int,
+    a9:int
+):int{
+    var big:int
+    var bigi:int
+    big=a0
+    bigi=0
+    if a1 > big {
+        big=a1
+        bigi=1
+    }
+    if a2 > big {
+        big=a2
+        bigi=2
+    }
+    if a3 > big {
+        big=a3
+        bigi=3
+    }
+    if a4 > big {
+        big=a4
+        bigi=4
+    }
+    if a5 > big {
+        big=a5
+        bigi=5
+    }
+    if a6 > big {
+        big=a6
+        bigi=6
+    }
+    if a7 > big {
+        big=a7
+        bigi=7
+    }
+    if a8 > big {
+        big=a8
+        bigi=8
+    }
+    if a9 > big {
+        big=a9
+        bigi=9
+    }
+    return bigi
+        
+}
+

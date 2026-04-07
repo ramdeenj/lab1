@@ -1,0 +1,11 @@
+// {"output": null, "input": null, "reason": "Assigning bool result to integer variable x", "compiles": false}
+func main(): int {
+    var x: int
+    x = bar()
+    return 4
+}
+
+func bar(): bool {
+    return true
+}
+

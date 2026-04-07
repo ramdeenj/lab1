@@ -1,0 +1,8 @@
+// { "returns": 10 }
+func main(): int {
+
+    repeat {
+        return 10
+    } until false 
+    
+}

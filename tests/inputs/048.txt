@@ -1,0 +1,15 @@
+// {"returns": 3}
+func main(): int {
+    var i: int
+    i=0
+    repeat {
+        if( i>0 ) {
+            return 2
+        } else {
+            return 3
+        }
+        continue
+        return 3
+    } until(i>10)
+}
+

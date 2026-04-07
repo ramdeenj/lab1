@@ -1,0 +1,15 @@
+// {"returns": 4, "output": null, "input": null}
+func main(): int {
+    var x: bool
+    x = bar()
+    if(x) {
+        return 4
+    } else {
+        return 5
+    }
+}
+
+func bar(): bool {
+    return true
+}
+

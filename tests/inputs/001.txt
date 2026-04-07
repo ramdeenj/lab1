@@ -1,6 +1,11 @@
-// { "compiles": true, "hang": false, "crash": false, "returns": 42 }
+// {"returns": 40}
 var x: int
-func main(): int {
-    x=42
+
+func bar(){
+    x=40
+}
+
+func main(): int{
+    bar()
     return x
 }

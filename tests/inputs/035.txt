@@ -1,0 +1,13 @@
+// {"output": null, "input": null, "compiles": false}
+func main() : int {
+    if( isEven(3) ) {
+        return 5
+    } else {
+        return 7
+    }
+}
+
+func isEven(x: int) : int {
+    return (x & 1) == 0
+}
+

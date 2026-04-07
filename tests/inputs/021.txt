@@ -1,0 +1,9 @@
+// { "bonus": true, "compiles": false }
+func main(): int {
+
+    repeat {
+        break
+        return 10
+    } until false
+
+}

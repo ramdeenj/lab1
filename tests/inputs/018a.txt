@@ -1,0 +1,9 @@
+// { "bonus": true, "compiles": false }
+func main(): int {
+    var x: int
+    x = 100
+    if( x == 10 ){
+        return 20
+    }
+    x=200
+}

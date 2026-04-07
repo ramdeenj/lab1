@@ -93,4 +93,73 @@ public class CallNode : ExprNode
             result.Add(node.type);
         }
     }
+
+    private void collectArgExprs(ExprNode node, List<ExprNode> result)
+    {
+        if (node is NoArgsNode) return;
+        if (node is BinOpNode bin && bin.token.lexeme == ",")
+        {
+            collectArgExprs(bin.left, result);
+            collectArgExprs(bin.right, result);
+        }
+        else
+        {
+            result.Add(node);
+        }
+    }
+
+    private void genCodeArgs(ExprNode node)
+    {
+        if (node is NoArgsNode) return;
+        if (node is BinOpNode bin && bin.token.lexeme == ",")
+        {
+            genCodeArgs(bin.left);
+            genCodeArgs(bin.right);
+        }
+        else
+        {
+            node.genCode();
+        }
+    }
+
+    public override void genCode()
+    {
+        genCodeArgs(args);
+
+        var argExprs = new List<ExprNode>();
+        collectArgExprs(args, argExprs);
+        int argCount = argExprs.Count;
+
+        for (int i = argCount - 1; i >= 0; i--)
+        {
+            ExprNode arg = argExprs[i];
+            ASM.Asm.emit(new ASM.OpMovConstReg((long)ASM.StorageClass.STATIC, ASM.Register.rax));
+            ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rax));
+
+            if (arg.type is FloatType)
+            {
+                arg.temporary.moveToXmmRegister(ASM.Register.xmm0);
+                ASM.Asm.emit(new ASM.OpMovqXmmReg(ASM.Register.xmm0, ASM.Register.rax));
+            }
+            else
+            {
+                arg.temporary.moveToRegister(ASM.Register.rax);
+            }
+            ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rax));
+        }
+
+        if (function is VarNode vn2)
+        {
+            ASM.Asm.emit(new ASM.RawOp($"    callq {vn2.token.lexeme}"));
+        }
+        else
+        {
+            throw new System.NotImplementedException("CallNode.genCode: non-VarNode function not supported");
+        }
+
+        if (argCount > 0)
+            ASM.Asm.emit(new ASM.RawOp($"    addq ${argCount * 16}, %rsp"));
+
+        temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
+    }
 }

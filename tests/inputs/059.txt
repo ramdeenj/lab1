@@ -1,0 +1,21 @@
+// {"bonus": true, "reason": "no return from non-void function sum", "output": null, "input": null, "compiles": false}
+var y: int
+var iters: int
+func main(): int {
+    y = 10
+    sum()
+}
+
+func sum(): int {
+    var total: int
+    total=0
+    iters=0
+    while(true){
+        total = total + y
+        y = y-1
+        if( y == 0 ){
+            return total
+        }
+        iters = iters+1
+    }
+}

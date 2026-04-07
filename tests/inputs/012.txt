@@ -1,0 +1,14 @@
+// {"returns": 3}
+
+
+func main(): int{
+    return quo(8,4)
+}
+
+
+func quo(n: int, d: int): int{
+    var y: int
+    y = n/d
+    return y+1
+}
+

@@ -1,0 +1,16 @@
+// {"returns": 2}
+
+func main(): int {
+    var i: int
+    repeat {
+        i=5
+        if( false ){
+            return 4
+            if( true ){
+                continue
+            }
+        }
+        return 2
+    } until(false)
+}
+

@@ -1,0 +1,11 @@
+// {"returns": 5, "output": null, "input": null}
+var x: int
+func main(): int {
+    bar()
+    return x
+}
+
+func bar() {
+    x=5
+}
+

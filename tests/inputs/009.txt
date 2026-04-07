@@ -1,0 +1,12 @@
+// {"returns": 15}
+
+
+func main(): int{
+    return bar(10)
+}
+
+
+func bar(x: int): int{
+    return x+5
+}
+

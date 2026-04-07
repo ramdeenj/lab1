@@ -19,6 +19,17 @@ public class BreakNode : StmtNode
         Utils.error("'break' used outside of a loop");
     }
 
+    public override void setupCFG()
+    {
+        TreeNode cur = this.parent;
+        while (cur != null)
+        {
+            if (cur is LoopNode ln) { entry.addNext(ln.exit); return; }
+            if (cur is RepeatNode rn) { entry.addNext(rn.exit); return; }
+            cur = cur.parent;
+        }
+    }
+
     public override void genCode()
     {
         TreeNode cur = this.parent;

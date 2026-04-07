@@ -177,13 +177,6 @@ public class ProgramNode : TreeNode
             // Handle else/else if chain attached to last if statement
             while (T.peek() == "else")
             {
-                // else is only valid if the if is the only statement so far
-                if (stmts.Count > 1)
-                {
-                    Utils.error("'else' without matching 'if'");
-                    return null;
-                }
-
                 var last = stmts[stmts.Count - 1];
                 CondNode target = findInnermostIf(last as CondNode);
                 if (target == null)

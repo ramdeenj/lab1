@@ -1,0 +1,12 @@
+// {"returns": 1}
+
+
+func main(): int{
+    return bar(1)
+}
+
+
+func bar(x: int): int{
+    return 1
+}
+

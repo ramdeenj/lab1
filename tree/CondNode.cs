@@ -26,6 +26,23 @@ public class CondNode : StmtNode
             Utils.error($"Type error: 'if' condition must be bool, got {condition.type.typeName()}");
     }
 
+    public override void setupCFG()
+    {
+        entry.addNext(condition);
+        condition.exit.addNext(thenBranch);
+        thenBranch.exit.addNext(exit);
+
+        if (elseBranch != null)
+        {
+            condition.exit.addNext(elseBranch);
+            elseBranch.exit.addNext(exit);
+        }
+        else
+        {
+            condition.exit.addNext(exit);
+        }
+    }
+
     public override void genCode()
     {
         if (elseBranch == null)

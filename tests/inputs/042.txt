@@ -1,0 +1,5 @@
+// {"bonus": true, "output": null, "input": null, "compiles": false}
+func main(): int {
+    var x: int
+    x = 42
+}

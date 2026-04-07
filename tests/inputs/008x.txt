@@ -1,0 +1,14 @@
+// {"returns": 3}
+
+func main(): int{
+    y=2
+    return bar(1)
+}
+
+
+var y: int
+
+func bar(x: int): int{
+    return x+y
+}
+

@@ -1,0 +1,11 @@
+// {"bonus": true, "output": null, "input": null, "compiles": false}
+func main(): int {
+    var i: int
+    i=0
+    repeat {
+        break
+        return 2
+        break
+        return 3
+    } until(i<10)
+}

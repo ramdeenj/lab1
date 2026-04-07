@@ -1,0 +1,7 @@
+// {"bonus": true, "output": null, "input": null, "compiles": false}
+var x: int
+func main(): int {
+    while( x > 10 ){
+        return 1
+    }
+}

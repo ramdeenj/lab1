@@ -20,7 +20,7 @@ def run(args,quiet,timeout=None):
 
     if timeout == None:
         timeout = TIMEOUT
-        
+
     if VERBOSE:
         print(" ".join( [shlex.quote(q) for q in args] ) )
 
@@ -62,7 +62,7 @@ def run(args,quiet,timeout=None):
         rcode=-1
         o=""
         e=""
-        
+
     return completed,crashed,rcode, o, e
 
 
@@ -86,11 +86,11 @@ def replace(lst, values):
 
 
 
-def error(*msg):
+def fatal(*msg):
     tmp = " ".join([str(q) for q in msg])
     print("ERROR!")
     print(tmp)
-    raise BooBoo()
+    sys.exit(1)
 
 def main():
     stopOnFirstFail=True
@@ -140,7 +140,7 @@ def main():
             badBonus(*msg)
         else:
             badNonbonus(*msg)
-            
+
     def printStats():
         print("Num Passing:      ",numGood)
         if numGoodBonus + numBadBonus > 0:
@@ -158,7 +158,7 @@ def main():
 
     for o,a in opts:
         if o in ["-k","--stop"]:
-            stopOnFirstFail=not stopOnFirstFail
+            stopOnFirstFail=False
         elif o in ["-v","--verbose"]:
             VERBOSE=True
         elif o in ["-s","--skip"]:
@@ -172,7 +172,7 @@ def main():
         COMPILER=args[0]
 
     if not os.path.exists("tests") or not os.path.exists("tests/inputs"):
-        error("Could not find tests folder")
+        fatal("Could not find tests folder")
 
     numtests = 0
     alltests=[]
@@ -184,7 +184,7 @@ def main():
     alltests.sort()
 
     if len(alltests) == 0:
-        error("No tests found")
+        fatal("No tests found")
 
     for counter,tmp in enumerate(alltests):
         dirpath,f = tmp
@@ -206,10 +206,20 @@ def main():
             print(e)
             sys.exit(1)
 
-        shouldcompile = J.get("compiles",True)
-        isBonus = J.get("bonus",False)
-        shouldComplete = not J["hang"]
-        shouldCrash = J["crash"]
+        shouldcompile = J.pop("compiles",True)
+        isBonus = J.pop("bonus",False)
+        shouldComplete = not J.pop("hangs",False)
+        shouldCrash = J.pop("crash",False)
+        shouldReturn=J.pop("returns",None)
+        output=J.pop("output",None)
+        input=J.pop("input",None)
+        reason=J.pop("reason","")
+        if reason:
+            reason = " "+reason
+
+        if J:
+            print(J)
+            assert 0
 
         if isBonus:
             testText = "Bonus test"
@@ -227,10 +237,10 @@ def main():
             flags.append("crashes")
 
         if len(flags):
-            flags="[" + ",".join(flags) + "]"
+            flags="[" + ",".join(flags) + f"{reason}]"
         else:
             flags=""
-            
+
         print(f"{testText} {counter+1} of {len(alltests)} ({f}) {flags}...",end="")
         if counter < SKIP:
             print("SKIPPED")
@@ -241,7 +251,7 @@ def main():
 
         completed,crashed,r,o,e = run([COMPILER,dirpath+"/"+f,"out.asm"],quiet=False)
         if not completed:
-            error("Compiler froze")
+            bad("Compiler froze")
         if crashed:
             didcompile = False
         else:
@@ -260,9 +270,9 @@ def main():
             bad(msg)
         else:
             if didcompile:
-                
+
                 didComplete,didCrash,didReturn,o,e = run([os.path.join(".","out.exe")],quiet=True,timeout=RUN_TIMEOUT)
-                
+
                 if shouldComplete != didComplete:
                     msg="Executable should have "
                     if shouldComplete:
@@ -290,27 +300,26 @@ def main():
                         msg += "crash"
                         bad(msg)
                     else:
-                        shouldReturn = J.get("returns",None)
                         if shouldReturn == None:
                             shouldReturn=[-1]
                             didReturn=-1
-                        
+
                         if type(shouldReturn) == int:
                             shouldReturn = [shouldReturn]
                         elif type(shouldReturn) == list:
-                            pass 
+                            pass
                         elif shouldReturn == None:
                             pass
                         else:
                             assert 0,f"shouldReturn is {shouldReturn}"
-                        
+
                         if didReturn not in shouldReturn:
                             if len(shouldReturn) > 1:
                                 X = ",".join([str(q) for q in shouldReturn])
                                 shouldReturn = "one of {" + str(X) + "}"
                             else:
                                 shouldReturn = shouldReturn[0]
-                                
+
                             msg = f"Executable should have returned {shouldReturn} but it returned {didReturn}"
                             bad(msg)
                         else:

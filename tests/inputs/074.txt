@@ -1,0 +1,9 @@
+// {"returns": 7}
+func main(): int {
+    return 4+foo(1)
+}
+
+func foo(foo: int): int{
+    return foo+2
+}
+

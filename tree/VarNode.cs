@@ -4,7 +4,6 @@ public class VarNode : ExprNode
 
     public VarNode(Token tok) : base(tok)
     {
-        // Try to look up now; null means it's a hoisted global, fixed in Phase 2
         info = SymbolTable.lookupIfExists(tok.lexeme);
     }
 
@@ -14,9 +13,17 @@ public class VarNode : ExprNode
             type = info.type;
     }
 
-    // Compute the rbp-relative offset for a local variable given its slot index.
-    // Temporaries occupy rbp-8 .. rbp-(maxTemporaries*16) (16 bytes each).
-    // Locals start just below: rbp-(maxTemporaries*16 + slotIndex*8 + 8)
+    public override void typeCheck()
+    {
+        if (info != null && info.type is FuncType)
+        {
+            TreeNode cur = this.parent;
+            if (cur is CallNode cn && cn.function == this)
+                return;
+            Utils.error($"'{token.lexeme}' is a function and cannot be used as a value");
+        }
+    }
+
     private int localOffset(int slotIndex)
     {
         TreeNode cur = this.parent;
@@ -29,8 +36,6 @@ public class VarNode : ExprNode
     public override void genCode()
     {
         if (info == null) return;
-
-        ASM.Asm.emit(new ASM.Comment($"Load variable '{token.lexeme}'"));
 
         if (info.location is GlobalLocation gl)
         {
@@ -50,7 +55,6 @@ public class VarNode : ExprNode
         }
     }
 
-    // Store rax into this variable's backing location (used by assignment)
     public void storeFromRegister()
     {
         if (info == null) return;

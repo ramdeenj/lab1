@@ -9,7 +9,7 @@ public class FuncdefNode : TreeNode
     public VarType returnType;
 
     public int maxTemporaries = 0;
-    public int localVarBytes = 0;  // bytes needed for local variables
+    public int localVarBytes = 0;
 
     public FuncdefNode(string name, Token nameToken, List<(Token, VarType)> parameters, StmtsNode body, VarType returnType)
     {
@@ -25,47 +25,61 @@ public class FuncdefNode : TreeNode
         return new List<TreeNode> { body };
     }
 
+    public override void setupCFG()
+    {
+        entry.addNext(body);
+        body.exit.addNext(exit);
+    }
+
     public override void genCode()
     {
         int counter = 0;
         maxTemporaries = 0;
         assignTemporaries(this, ref counter);
 
-        // How many bytes of locals were allocated during parse?
-        // We stored this per-function at parse time.
         int localBytes = localVarBytes;
 
-        // Prologue
-        ASM.Asm.emit(new ASM.Comment($"********** {name} **********"));
+        patchParamOffsets(this);
+
         ASM.Asm.emit(new ASM.Label(name));
         ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rbp));
         ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rsp, ASM.Register.rbp));
 
-        // Allocate space for temporaries AND local variables.
-        // Temporaries start at rbp-8, -16, ... (each 16 bytes for value+class)
-        // Local variables are placed BELOW the temporaries region.
-        // We put locals at: rbp - (maxTemporaries*16) - 8, -16, ...
-        // But simpler: locals use rbp-relative offsets that are tracked in LocalLocation.
-        // We just need to allocate enough stack space.
         int totalBytes = maxTemporaries * 16 + localBytes;
-        // Round up to 16-byte alignment
         totalBytes = (totalBytes + 15) & ~15;
 
-        ASM.Asm.emit(new ASM.Comment($"Allocate {maxTemporaries} temporaries + {localBytes} bytes for locals"));
         if (totalBytes > 0)
             ASM.Asm.emit(new ASM.OpSubRegConstant(totalBytes, ASM.Register.rsp));
 
-        // Suppress Windows crash dialogs so crashes are detectable by exit code
         if (name == "main")
         {
-            ASM.Asm.emit(new ASM.Comment("Suppress Windows crash dialogs"));
             ASM.Asm.emit(new ASM.RawOp("    movq $0x8007, %rcx"));
             ASM.Asm.emit(new ASM.RawOp("    callq SetErrorMode"));
         }
 
         body.genCode();
 
-        ASM.Asm.emit(new ASM.Comment($"********** End of {name} **********"));
+        ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbp, ASM.Register.rsp));
+        ASM.Asm.emit(new ASM.OpPopReg(ASM.Register.rbp));
+        ASM.Asm.emit(new ASM.Ret());
+    }
+
+    private void patchParamOffsets(TreeNode node)
+    {
+        foreach (var child in node.getChildNodes())
+            patchParamOffsets(child);
+
+        if (node is VarNode vn && vn.info != null && vn.info.location is ParameterLocation pl)
+        {
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                if (parameters[i].idToken.lexeme == vn.token.lexeme)
+                {
+                    pl.offset = 16 + i * 16;
+                    break;
+                }
+            }
+        }
     }
 
     private void assignTemporaries(TreeNode node, ref int counter)

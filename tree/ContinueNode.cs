@@ -19,6 +19,17 @@ public class ContinueNode : StmtNode
         Utils.error("'continue' used outside of a loop");
     }
 
+    public override void setupCFG()
+    {
+        TreeNode cur = this.parent;
+        while (cur != null)
+        {
+            if (cur is LoopNode ln) { entry.addNext(ln.testNode); return; }
+            if (cur is RepeatNode rn) { entry.addNext(rn.testNode); return; }
+            cur = cur.parent;
+        }
+    }
+
     public override void genCode()
     {
         TreeNode cur = this.parent;

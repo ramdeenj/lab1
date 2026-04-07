@@ -27,6 +27,24 @@ public class Program
         }
     }
 
+    static void fallOffEndCheck(CFGNode n, CFGNode funcExit, HashSet<CFGNode> visited)
+    {
+        visited.Add(n);
+        if (n == funcExit)
+        {
+            Utils.error("Did not use return in non-void function");
+        }
+        if (n.owner is ReturnNode rn && rn.isRealReturn)
+        {
+            return;
+        }
+        foreach (var nxt in n.next)
+        {
+            if (!visited.Contains(nxt))
+                fallOffEndCheck(nxt, funcExit, visited);
+        }
+    }
+
     public static void Main(string[] args)
     {
         if (args.Length < 2)
@@ -118,7 +136,31 @@ public class Program
             return;
         }
 
-        // Phase 6: Code generation
+        // Phase 6: Build CFG
+        walkPostorder(p, (TreeNode n) =>
+        {
+            n.setupCFG();
+        });
+
+        // Phase 7: Check for fall-off-end in non-void functions
+        try
+        {
+            walkPreorder(p, (TreeNode n) =>
+            {
+                if (n is FuncdefNode F && F.returnType != null)
+                {
+                    fallOffEndCheck(F.entry, F.exit, new HashSet<CFGNode>());
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e.Message);
+            Environment.Exit(1);
+            return;
+        }
+
+        // Phase 8: Code generation
         ASM.Asm.clear();
         p.genCode();
 

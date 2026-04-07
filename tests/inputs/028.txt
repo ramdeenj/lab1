@@ -1,0 +1,16 @@
+// {"returns": 45, "output": null, "input": null}
+
+func main() : int {
+    var x: int
+    x = foo()
+    return x + 1
+}
+
+func foo() : int {
+    return bar() + 2
+}
+
+func bar(): int {
+    return 42
+}
+

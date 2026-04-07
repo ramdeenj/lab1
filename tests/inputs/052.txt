@@ -1,0 +1,11 @@
+// { "compiles": false }
+
+func foo() {
+    return
+}
+
+func main(): int {
+    int y
+    y = foo()
+    return 1
+}

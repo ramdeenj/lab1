@@ -1,0 +1,18 @@
+// {"returns": 8, "output": null, "input": null}
+
+func main() : int {
+    return foo(10,15) + bar(20,4,2)
+}
+
+func foo(x: int, y: int) : int {
+    return y-x
+}
+
+func bar(x: int, y: int, z: int) : int {
+    var tmp: int
+    tmp = x/y           //20/4 = 5
+    var tmp2: int
+    tmp2 = tmp-z        //5-2=3
+    return tmp2
+}
+

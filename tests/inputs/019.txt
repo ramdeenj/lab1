@@ -1,0 +1,10 @@
+// { "returns": 30 }
+func main(): int {
+    var x: int
+    x = 100
+    if( x == 10 ){
+        return 20
+    } else {
+        return 30
+    }
+}

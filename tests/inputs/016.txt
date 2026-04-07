@@ -1,0 +1,6 @@
+// { "returns": 100 }
+func main(): int {
+    var x: int
+    x = 100
+    return x
+}

@@ -64,11 +64,49 @@ public class ReturnNode : StmtNode
             Utils.error($"Function {enclosing.name} declared return type {declared.typeName()} but returns {actual.typeName()}");
     }
 
+    public override void setupCFG()
+    {
+        if (!isRealReturn)
+        {
+            if (expr != null)
+            {
+                entry.addNext(expr);
+                expr.exit.addNext(exit);
+            }
+            else
+            {
+                entry.addNext(exit);
+            }
+            return;
+        }
+
+        FuncdefNode enclosing = null;
+        TreeNode cur = this.parent;
+        while (cur != null)
+        {
+            if (cur is FuncdefNode fd) { enclosing = fd; break; }
+            cur = cur.parent;
+        }
+
+        if (expr != null)
+        {
+            var realExit = new CFGNode("return-exit", this);
+            entry.addNext(expr);
+            expr.exit.addNext(realExit);
+            if (enclosing != null)
+                realExit.addNext(enclosing.exit);
+        }
+        else
+        {
+            if (enclosing != null)
+                entry.addNext(enclosing.exit);
+        }
+    }
+
     public override void genCode()
     {
         if (!isRealReturn)
         {
-            // Still need to evaluate the expression (e.g. for assignment side effects)
             if (expr != null)
                 base.genCode();
             return;
@@ -76,12 +114,10 @@ public class ReturnNode : StmtNode
 
         if (expr != null)
         {
-            ASM.Asm.emit(new ASM.Comment("return <expr>"));
-            base.genCode(); // generates expr's code
+            base.genCode();
 
             if (expr.type is FloatType)
             {
-                // Move float bits into rax for the test harness to read
                 expr.temporary.moveToXmmRegister(ASM.Register.xmm0);
                 ASM.Asm.emit(new ASM.OpMovqXmmReg(ASM.Register.xmm0, ASM.Register.rax));
             }
@@ -89,10 +125,9 @@ public class ReturnNode : StmtNode
             {
                 expr.temporary.moveToRegister(ASM.Register.rax);
             }
+            ASM.Asm.emit(new ASM.OpMovConstReg((long)ASM.StorageClass.STATIC, ASM.Register.rbx));
         }
 
-        // Epilogue
-        ASM.Asm.emit(new ASM.Comment("Epilogue"));
         ASM.Asm.emit(new ASM.OpMovRegReg(ASM.Register.rbp, ASM.Register.rsp));
         ASM.Asm.emit(new ASM.OpPopReg(ASM.Register.rbp));
         ASM.Asm.emit(new ASM.Ret());

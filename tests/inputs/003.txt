@@ -1,0 +1,15 @@
+// {"returns": 42}
+var x: int
+
+
+func baz(){
+    x=43
+}
+func bar(): int {
+    return 42
+}
+
+
+func main(): int{
+    return bar()
+}

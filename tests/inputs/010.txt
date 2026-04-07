@@ -1,0 +1,15 @@
+// {"returns": 120}
+
+func main(): int{
+    return factorial(5)
+}
+
+
+func factorial(x: int): int{
+    if( x < 2 ) {
+        return 1
+    } else {
+        return x * factorial(x-1)
+    }
+}
+

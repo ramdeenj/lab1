@@ -1,0 +1,12 @@
+// {"output": null, "input": null, "reason": "void function bar returns a value", "compiles": false}
+var x: int
+func main(): int {
+    bar()
+    return 1
+}
+
+func bar() {
+    x=5
+    return 2
+}
+

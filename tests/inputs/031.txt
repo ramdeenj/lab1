@@ -1,0 +1,10 @@
+// {"returns": 11, "output": null, "input": null}
+
+func main() : int {
+    return foo(10)
+}
+
+func foo(x: int) : int {
+    return x+1
+}
+

@@ -14,6 +14,12 @@ public class ElseNode : StmtNode
         return new List<TreeNode> { body };
     }
 
+    public override void setupCFG()
+    {
+        entry.addNext(body);
+        body.exit.addNext(exit);
+    }
+
     public override void genCode()
     {
         body.genCode();

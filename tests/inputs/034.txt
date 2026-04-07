@@ -1,0 +1,13 @@
+// {"returns": 7, "output": null, "input": null}
+func main() : int {
+    if( isEven(3+5) ) {
+        return 7
+    } else {
+        return 12
+    }
+}
+
+func isEven(x: int) : bool{
+    return (x & 1) == 0
+}
+

@@ -1,0 +1,11 @@
+// {"returns": 123}
+func main(): int {
+    foo(1)
+    return 123
+}
+
+func foo(x: int){
+    var foo: int
+    return
+}
+

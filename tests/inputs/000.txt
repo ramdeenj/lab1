@@ -1,0 +1,12 @@
+// {"returns": 40}
+var x: int
+
+func bar(){
+    x=40
+    return
+}
+
+func main(): int{
+    bar()
+    return x
+}
