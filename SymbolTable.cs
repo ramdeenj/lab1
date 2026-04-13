@@ -37,16 +37,11 @@ public class SymbolTable
     private SymbolTable? prev;
     private Dictionary<string, VarInfo> decls = new();
 
-    // Tracks the next available local variable slot (in bytes, relative to rbp)
-    // Each local uses 8 bytes. Slots count from 0, 1, 2, ...
-    // The actual rbp offset is computed at codegen time as:
-    //   actual_offset = -(maxTemporaries * 16 + (slotIndex * 8) + 8)
-    // During parse we just store the slot index (0, 1, 2, ...) in LocalLocation.offset
     private static int nextLocalSlot = 0;
 
     public static int allocLocal()
     {
-        return nextLocalSlot++;  // returns slot index 0, 1, 2, ...
+        return nextLocalSlot++;
     }
 
     public static int getLocalSlotCount() => nextLocalSlot;
@@ -110,7 +105,6 @@ public class SymbolTable
             scope = scope.prev;
         string label = "g_" + id.lexeme;
         scope.decls[id.lexeme] = new VarInfo(id, type, new GlobalLocation(label));
-        // Only add actual variables (not functions) to the .bss list
         if (!(type is FuncType))
             globalVars.Add((label, type));
     }
@@ -130,10 +124,29 @@ public class SymbolTable
         return null;
     }
 
+    private static void declareBuiltin(string name, VarType rtype, List<VarType> argTypes)
+    {
+        var t = new Token("ID", -1, name);
+        var parameters = new List<(string, VarType)>();
+        for (int i = 0; i < argTypes.Count; i++)
+            parameters.Add(($"arg{i}", argTypes[i]));
+        var F = new FuncType(rtype, parameters, isBuiltin: true);
+        declare(t, F, new GlobalLocation("_" + name));
+    }
+
+    public static void populateBuiltins()
+    {
+        declareBuiltin("putc",    new BoolType(), new List<VarType> { new IntType() });
+        declareBuiltin("newline", new VoidType(), new List<VarType>());
+        declareBuiltin("putv",    new BoolType(), new List<VarType> { new IntType(), new IntType() });
+        declareBuiltin("getc",    new IntType(),  new List<VarType>());
+    }
+
     public static void reset()
     {
         current = new SymbolTable(null);
         nextLocalSlot = 0;
         globalVars.Clear();
+        populateBuiltins();
     }
 }

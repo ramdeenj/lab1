@@ -38,11 +38,13 @@ public class FuncType : VarType
 {
     public VarType returnType;
     public List<(string name, VarType type)> parameters;
+    public bool isBuiltin;
 
-    public FuncType(VarType returnType, List<(string, VarType)> parameters)
+    public FuncType(VarType returnType, List<(string, VarType)> parameters, bool isBuiltin = false)
     {
         this.returnType = returnType;
         this.parameters = parameters;
+        this.isBuiltin = isBuiltin;
     }
 }
 

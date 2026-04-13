@@ -55,6 +55,9 @@ public class FuncdefNode : TreeNode
         {
             ASM.Asm.emit(new ASM.RawOp("    movq $0x8007, %rcx"));
             ASM.Asm.emit(new ASM.RawOp("    callq SetErrorMode"));
+            ASM.Asm.emit(new ASM.RawOp("    subq $32, %rsp"));
+            ASM.Asm.emit(new ASM.RawOp("    callq _rtinit"));
+            ASM.Asm.emit(new ASM.RawOp("    addq $32, %rsp"));
         }
 
         body.genCode();

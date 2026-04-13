@@ -1,12 +1,20 @@
 .section .text
     .globl main
     .extern SetErrorMode
+    .extern _rtinit
+    .extern _putc
+    .extern _newline
+    .extern _putv
+    .extern _getc
 main:
     pushq %rbp
     movq %rsp, %rbp
     subq $144, %rsp
     movq $0x8007, %rcx
     callq SetErrorMode
+    subq $32, %rsp
+    callq _rtinit
+    addq $32, %rsp
 lbl2:
     // Constant [NUM 6 5]
     movq $5, %rax

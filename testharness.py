@@ -16,7 +16,7 @@ class BooBoo(Exception):
 
 RUN_TIMEOUT=3
 
-def run(args,quiet,timeout=None):
+def run(args,quiet,timeout=None,input=None):
 
     if timeout == None:
         timeout = TIMEOUT
@@ -33,10 +33,15 @@ def run(args,quiet,timeout=None):
     if "win" in platform.system().lower():
         kw["creationflags"] = subprocess.CREATE_NO_WINDOW
 
+    if input:
+        kw["stdin"] = subprocess.PIPE
+    else:
+        input=""
+
     p = subprocess.Popen(args,**kw)
 
     try:
-        o,e = p.communicate(timeout=timeout)
+        o,e = p.communicate(input.encode(),timeout=timeout)
         if not o:
             o=b""
         if not e:
@@ -271,7 +276,7 @@ def main():
         else:
             if didcompile:
 
-                didComplete,didCrash,didReturn,o,e = run([os.path.join(".","out.exe")],quiet=True,timeout=RUN_TIMEOUT)
+                didComplete,didCrash,didReturn,o,e = run([os.path.join(".","out.exe")],quiet=True,timeout=RUN_TIMEOUT,input=input)
 
                 if shouldComplete != didComplete:
                     msg="Executable should have "
@@ -308,10 +313,12 @@ def main():
                             shouldReturn = [shouldReturn]
                         elif type(shouldReturn) == list:
                             pass
+                        elif type(shouldReturn) == str:
+                            shouldReturn = [int(shouldReturn)]
                         elif shouldReturn == None:
                             pass
                         else:
-                            assert 0,f"shouldReturn is {shouldReturn}"
+                            assert 0,f"shouldReturn is not int or list: {type(shouldReturn)} = {shouldReturn}"
 
                         if didReturn not in shouldReturn:
                             if len(shouldReturn) > 1:
@@ -323,7 +330,11 @@ def main():
                             msg = f"Executable should have returned {shouldReturn} but it returned {didReturn}"
                             bad(msg)
                         else:
-                            good()
+                            if output and o != output:
+                                bad("Output mismatch (stdout)")
+                            else:
+                                good()
+
                         #end if return matches
                     #end if should crash
                 #end if should complete

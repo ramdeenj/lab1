@@ -285,6 +285,11 @@ namespace ASM
             outputFile.WriteLine(".section .text");
             outputFile.WriteLine($"    .globl {entryLabel}");
             outputFile.WriteLine("    .extern SetErrorMode");
+            outputFile.WriteLine("    .extern _rtinit");
+            outputFile.WriteLine("    .extern _putc");
+            outputFile.WriteLine("    .extern _newline");
+            outputFile.WriteLine("    .extern _putv");
+            outputFile.WriteLine("    .extern _getc");
             foreach (var op in opcodes)
                 outputFile.WriteLine(op);
             outputFile.WriteLine(".section .data");

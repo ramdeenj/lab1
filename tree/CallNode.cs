@@ -130,36 +130,85 @@ public class CallNode : ExprNode
         collectArgExprs(args, argExprs);
         int argCount = argExprs.Count;
 
-        for (int i = argCount - 1; i >= 0; i--)
-        {
-            ExprNode arg = argExprs[i];
-            ASM.Asm.emit(new ASM.OpMovConstReg((long)ASM.StorageClass.STATIC, ASM.Register.rax));
-            ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rax));
+        // Check if this is a builtin (C foreign function) call
+        bool isBuiltin = false;
+        if (function is VarNode vn3 && vn3.info?.type is FuncType ft3)
+            isBuiltin = ft3.isBuiltin;
 
-            if (arg.type is FloatType)
-            {
-                arg.temporary.moveToXmmRegister(ASM.Register.xmm0);
-                ASM.Asm.emit(new ASM.OpMovqXmmReg(ASM.Register.xmm0, ASM.Register.rax));
-            }
-            else
-            {
-                arg.temporary.moveToRegister(ASM.Register.rax);
-            }
-            ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rax));
-        }
-
-        if (function is VarNode vn2)
+        if (isBuiltin)
         {
-            ASM.Asm.emit(new ASM.RawOp($"    callq {vn2.token.lexeme}"));
+            // Push args right-to-left onto the stack (value + storage class, 16 bytes each)
+            for (int i = argCount - 1; i >= 0; i--)
+            {
+                ExprNode arg = argExprs[i];
+                ASM.Asm.emit(new ASM.OpMovConstReg((long)ASM.StorageClass.STATIC, ASM.Register.rax));
+                ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rax));
+
+                if (arg.type is FloatType)
+                {
+                    arg.temporary.moveToXmmRegister(ASM.Register.xmm0);
+                    ASM.Asm.emit(new ASM.OpMovqXmmReg(ASM.Register.xmm0, ASM.Register.rax));
+                }
+                else
+                {
+                    arg.temporary.moveToRegister(ASM.Register.rax);
+                }
+                ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rax));
+            }
+
+            // Pass stack pointer (pointing at the args) in rcx — the C ABI first parameter
+            ASM.Asm.emit(new ASM.RawOp("    movq %rsp, %rcx"));
+
+            // Add 32 bytes of shadow space required by Windows x64 ABI
+            ASM.Asm.emit(new ASM.RawOp("    subq $32, %rsp"));
+
+            string funcName = ((VarNode)function).token.lexeme;
+            ASM.Asm.emit(new ASM.RawOp($"    callq _{funcName}"));
+
+            // Discard shadow space
+            ASM.Asm.emit(new ASM.RawOp("    addq $32, %rsp"));
+
+            // Discard arguments from stack
+            if (argCount > 0)
+                ASM.Asm.emit(new ASM.RawOp($"    addq ${argCount * 16}, %rsp"));
+
+            // Return value comes back in rax
+            temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
         }
         else
         {
-            throw new System.NotImplementedException("CallNode.genCode: non-VarNode function not supported");
+            // Normal (non-builtin) function call
+            for (int i = argCount - 1; i >= 0; i--)
+            {
+                ExprNode arg = argExprs[i];
+                ASM.Asm.emit(new ASM.OpMovConstReg((long)ASM.StorageClass.STATIC, ASM.Register.rax));
+                ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rax));
+
+                if (arg.type is FloatType)
+                {
+                    arg.temporary.moveToXmmRegister(ASM.Register.xmm0);
+                    ASM.Asm.emit(new ASM.OpMovqXmmReg(ASM.Register.xmm0, ASM.Register.rax));
+                }
+                else
+                {
+                    arg.temporary.moveToRegister(ASM.Register.rax);
+                }
+                ASM.Asm.emit(new ASM.OpPushReg(ASM.Register.rax));
+            }
+
+            if (function is VarNode vn2)
+            {
+                ASM.Asm.emit(new ASM.RawOp($"    callq {vn2.token.lexeme}"));
+            }
+            else
+            {
+                throw new System.NotImplementedException("CallNode.genCode: non-VarNode function not supported");
+            }
+
+            if (argCount > 0)
+                ASM.Asm.emit(new ASM.RawOp($"    addq ${argCount * 16}, %rsp"));
+
+            temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
         }
-
-        if (argCount > 0)
-            ASM.Asm.emit(new ASM.RawOp($"    addq ${argCount * 16}, %rsp"));
-
-        temporary.moveFromRegister(ASM.Register.rax, ASM.StorageClass.STATIC);
     }
 }
