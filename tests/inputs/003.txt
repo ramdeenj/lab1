@@ -1,15 +1,7 @@
-// {"returns": 42}
-var x: int
+// {"returns": "125", "output": "Foo\tBar"}
+    var x: int
+    func main() : int {
+        print("Foo\tBar")
+        return 125
+    }
 
-
-func baz(){
-    x=43
-}
-func bar(): int {
-    return 42
-}
-
-
-func main(): int{
-    return bar()
-}

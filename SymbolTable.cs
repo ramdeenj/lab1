@@ -140,6 +140,8 @@ public class SymbolTable
         declareBuiltin("newline", new VoidType(), new List<VarType>());
         declareBuiltin("putv",    new BoolType(), new List<VarType> { new IntType(), new IntType() });
         declareBuiltin("getc",    new IntType(),  new List<VarType>());
+        declareBuiltin("print",   new VoidType(), new List<VarType> { new StringType() });
+        declareBuiltin("length",  new IntType(),  new List<VarType> { new StringType() });
     }
 
     public static void reset()

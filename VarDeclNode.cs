@@ -17,6 +17,31 @@ public class VarDeclNode : StmtNode
         return new List<TreeNode>();
     }
 
+    public override void genCode()
+    {
+        // Only initialize local variables (not globals or class members)
+        if (info == null || !(info.location is LocalLocation ll))
+            return;
+
+        // Walk up to find enclosing FuncdefNode to get maxTemporaries
+        int maxTemp = 0;
+        TreeNode cur = this.parent;
+        while (cur != null)
+        {
+            if (cur is FuncdefNode fn) { maxTemp = fn.maxTemporaries; break; }
+            cur = cur.parent;
+        }
+
+        int off = -(maxTemp * 16 + ll.offset * 8 + 8);
+
+        if (varType is StringType)
+            ASM.Asm.emit(new ASM.RawOp("    leaq emptyString(%rip), %rax"));
+        else
+            ASM.Asm.emit(new ASM.RawOp("    movq $0, %rax"));
+
+        ASM.Asm.emit(new ASM.OpMovRegRegInd(ASM.Register.rax, off, ASM.Register.rbp));
+    }
+
     public static bool canParse(Tokenizer T)
     {
         return T.peek() == "var";

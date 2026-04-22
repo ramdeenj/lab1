@@ -24,7 +24,7 @@ FALSE :: false
 AS :: as
 FLOAT :: [0-9]+\.[0-9]+
 NUM :: [0-9]+
-STRING :: ""[^""]*""
+STRING :: ""([^""\\]|\\.)*""
 ID :: [a-zA-Z_][a-zA-Z0-9_]*
 POWER :: \*\*
 SHIFTLEFT :: <<

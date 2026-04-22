@@ -1,15 +1,7 @@
-// {"returns": 13}
+// {"returns": "125", "output": "C:\\Users\\Bob"}
+    var x: int
+    func main() : int {
+        print("C:\\Users\\Bob")
+        return 125
+    }
 
-
-func main(): int{
-    return bar()+2
-}
-
-
-func bar(): int{
-    return baz()+1
-}
-
-func baz(): int{
-    return 10
-}

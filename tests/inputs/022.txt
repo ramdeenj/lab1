@@ -1,9 +1,8 @@
-// { "bonus": true, "compiles": false }
-func main(): int {
-
-    repeat {
-        continue
-        return 10
-    } until true
-
+// {"returns": "1", "output": "the /* text */\nint3 /*"}
+func main(): int{
+    var b: string
+    b="the /* text */\nint3 /*"
+    print(b)
+    return 1
 }
+

@@ -1,11 +1,6 @@
-// {"returns": 40}
-var x: int
+// {"returns": "124", "output": "Foo\nBar"}
+    func main() : int {
+        print("Foo\nBar")
+        return 124
+    }
 
-func bar(){
-    x=40
-}
-
-func main(): int{
-    bar()
-    return x
-}

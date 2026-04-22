@@ -1,9 +1,27 @@
-// { "bonus": true, "compiles": false }
-func main(): int {
+// {"returns": "155", "output": "0\n\n0\n\n123\nblah\n32boom"}
+func main(): int{
+    var a: int
+    var b: string
+    var c: int
+    var d: string
 
-    repeat {
-        break
-        return 10
-    } until false
-
+    putv(a,10)
+    newline()
+    print(b)
+    newline()
+    putv(c,10)
+    newline()
+    print(d)
+    newline()
+    a=123
+    b="blah\n"
+    c=32
+    d="boom"
+    putv(a,10)
+    newline()
+    print(b)
+    putv(c,10)
+    print(d)
+    return a+c
 }
+

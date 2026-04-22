@@ -31,6 +31,7 @@ namespace ASM
         public readonly string lbl;
         public Label() { this.lbl = $"lbl{counter_++}"; }
         public Label(string name) { this.lbl = name; }
+        public static void resetCounter() { counter_ = 0; }
         public override string ToString() => $"{lbl}:";
     }
 
@@ -278,6 +279,8 @@ namespace ASM
         public static void clear()
         {
             opcodes.Clear();
+            StringPool.clear();
+            Label.resetCounter();
         }
 
         public static void write(TextWriter outputFile, string entryLabel)
@@ -290,14 +293,31 @@ namespace ASM
             outputFile.WriteLine("    .extern _newline");
             outputFile.WriteLine("    .extern _putv");
             outputFile.WriteLine("    .extern _getc");
+            outputFile.WriteLine("    .extern _print");
+            outputFile.WriteLine("    .extern _length");
             foreach (var op in opcodes)
                 outputFile.WriteLine(op);
+
+            // Emit string constants (emptyString + all pool entries) into .text
+            StringPool.emit(outputFile);
+
+            // Global string vars go in .data, initialized to point to emptyString
             outputFile.WriteLine(".section .data");
-            outputFile.WriteLine(".section .bss");
-            // Emit global variable declarations
             foreach (var (name, type) in SymbolTable.GlobalVars)
             {
-                outputFile.WriteLine($"    .lcomm {name}, 8");
+                if (type is StringType)
+                {
+                    outputFile.WriteLine($"{name}:");
+                    outputFile.WriteLine($"    .quad emptyString");
+                }
+            }
+
+            // Non-string global vars go in .bss (zero-initialized)
+            outputFile.WriteLine(".section .bss");
+            foreach (var (name, type) in SymbolTable.GlobalVars)
+            {
+                if (!(type is StringType))
+                    outputFile.WriteLine($"    .lcomm {name}, 8");
             }
         }
     }

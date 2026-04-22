@@ -1,3 +1,0 @@
-// {"bonus": true, "output": null, "input": null, "compiles": false}
-func main(): int {
-}

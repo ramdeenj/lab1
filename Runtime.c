@@ -51,7 +51,7 @@ static unsigned toHex(int64_t x, char output[16]) {
 
 static unsigned toDecimal(int64_t x, char output[20]) {
     if (x == 0) { *output = '0'; return 1; }
-    int64_t place = (int64_t)10000000000000000000ULL;
+    int64_t place = (int64_t)1000000000000000000LL;  /* 10^18, fits in int64_t */
     int oo = 0;
     while (place > 0) {
         int64_t quotient = x / place;
@@ -94,4 +94,20 @@ int64_t _getc(StackVar* stk) {
     char v;
     ReadFile(stdin_h, &v, 1, &count, (void*)0);
     return (int64_t)v;
+}
+
+__attribute__((ms_abi))
+int64_t _print(StackVar* stk) {
+    char* ptr = (char*)stk[0].value;
+    int64_t len = *(int64_t*)ptr;
+    DWORD count;
+    if (len > 0)
+        WriteFile(stdout_h, ptr + 8, (DWORD)len, &count, (void*)0);
+    return 0;
+}
+
+__attribute__((ms_abi))
+int64_t _length(StackVar* stk) {
+    char* ptr = (char*)stk[0].value;
+    return *(int64_t*)ptr;
 }

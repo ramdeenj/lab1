@@ -1,15 +1,9 @@
-// {"returns": 120}
-
-func main(): int{
-    return factorial(5)
-}
-
-
-func factorial(x: int): int{
-    if( x < 2 ) {
-        return 1
-    } else {
-        return x * factorial(x-1)
+// {"returns": "125", "output": "bam"}
+    var x: string
+    func main() : int {
+        x="bar"
+        x="bam"
+        print(x)
+        return 125
     }
-}
 

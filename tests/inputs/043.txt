@@ -1,7 +1,0 @@
-// {"output": null, "input": null, "compiles": false}
-func main(): int {
-    if( x > 10 ) {
-        return 1
-    }
-}
-

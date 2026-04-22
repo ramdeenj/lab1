@@ -1,12 +1,8 @@
-// {"returns": 15}
-
-
-func main(): int{
-    return bar(10)
-}
-
-
-func bar(x: int): int{
-    return x+5
-}
+// {"returns": "126", "output": "bam"}
+    func main() : int {
+        var x: string
+        x="bam"
+        print(x)
+        return 126
+    }
 

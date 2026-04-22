@@ -1,6 +1,7 @@
-// { "returns": 100 }
-func main(): int {
-    var x: int
-    x = 100
-    return x
-}
+// {"returns": "0", "output": ""}
+    var x: string
+    func main(): int{
+        print(x)
+        return length(x)
+    }
+

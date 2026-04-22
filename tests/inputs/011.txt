@@ -1,18 +1,9 @@
-// {"returns": 34}
-
-
-
-//1,1,2,3,5,8,13,21,34,55,...
-func main(): int{
-    return fib(9)
-}
-
-
-func fib(x: int): int{
-    if( x <= 2 ) {
-        return 1
-    } else {
-        return fib(x-1) + fib(x-2)
+// {"returns": "129", "output": "bam"}
+    func main() : int {
+        var x: string
+        x="bar"
+        x="bam"
+        print(x)
+        return 129
     }
-}
 

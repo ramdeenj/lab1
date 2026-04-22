@@ -1,14 +1,12 @@
-// {"returns": 3}
-
-
-func main(): int{
-    return quo(8,4)
-}
-
-
-func quo(n: int, d: int): int{
-    var y: int
-    y = n/d
-    return y+1
-}
+// {"returns": "125", "output": "bam"}
+    var x: string
+    var y: string
+    var z: string
+    func main() : int {
+        x="bar"
+        y="bam"
+        z="boom"
+        print(y)
+        return 125
+    }
 
